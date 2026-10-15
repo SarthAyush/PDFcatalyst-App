@@ -3,7 +3,7 @@
 
 #define MyAppName "PDFix"
 #ifndef MyAppVersion
-  #define MyAppVersion "0.8.1"
+  #define MyAppVersion "1.0.0"
 #endif
 #define MyAppPublisher "Sarthak"
 #define MyAppURL "https://github.com/SarthAyush/PDFix-App"

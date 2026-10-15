@@ -18,12 +18,12 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/SarthAyush/PDFix-App/releases/download/v0.8.1/PDFix-Setup-v0.8.1-x64.exe">
+  <a href="https://github.com/SarthAyush/PDFix-App/releases/download/v1.0.0/PDFix-Setup-v1.0.0-x64.exe">
     <img src="https://img.shields.io/badge/Download-PDFix%20Installer%20(.EXE)-0078D4?style=for-the-badge&logo=windows&logoColor=white" alt="Download Direct EXE" height="42">
   </a>
   &nbsp;&nbsp;
-  <a href="https://github.com/SarthAyush/PDFix-App/releases/tag/v0.8.1">
-    <img src="https://img.shields.io/badge/Release-v0.8.1%20Notes-238636?style=for-the-badge&logo=github&logoColor=white" alt="v0.8.1 Release" height="42">
+  <a href="https://github.com/SarthAyush/PDFix-App/releases/tag/v1.0.0">
+    <img src="https://img.shields.io/badge/Release-v1.0.0%20Notes-238636?style=for-the-badge&logo=github&logoColor=white" alt="v1.0.0 Release" height="42">
   </a>
 </p>
 
@@ -33,7 +33,7 @@
 
 | Platform | Package | Direct Download Link |
 | :--- | :--- | :--- |
-| **Windows (x64)** | **Official Windows Installer (`.exe`)** | [**Download PDFix-Setup-v0.8.1-x64.exe**](https://github.com/SarthAyush/PDFix-App/releases/download/v0.8.1/PDFix-Setup-v0.8.1-x64.exe) |
+| **Windows (x64)** | **Official Windows Installer (`.exe`)** | [**Download PDFix-Setup-v1.0.0-x64.exe**](https://github.com/SarthAyush/PDFix-App/releases/download/v1.0.0/PDFix-Setup-v1.0.0-x64.exe) |
 | **All Platforms** | **Release Assets & Notes** | [**View GitHub Releases**](https://github.com/SarthAyush/PDFix-App/releases) |
 
 ---

@@ -288,7 +288,7 @@ pub(crate) fn dialog(app: &mut PdfCraftApp, ctx: &egui::Context) {
             }
             Check::Done(Ok(r)) if is_newer(&r.version, current) => {
                 let version = r.version.trim_start_matches(['v', 'V']);
-                ui.label(egui::RichText::new(crate::i18n::fmt(tl!("PdfCraft {v} is available."), &[("v", version)])).strong());
+                ui.label(egui::RichText::new(format!("PDFix {version} is available.")).strong());
                 ui.label(
                     egui::RichText::new(format!("Current version installed: {current}"))
                         .color(t.text_muted),
