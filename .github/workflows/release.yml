@@ -1,0 +1,81 @@
+name: Build & Publish Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: 'Release tag to build (e.g., v0.7.2)'
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build-and-release:
+    name: Build & Package Windows Release
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache Cargo dependencies
+        uses: Swatinem/rust-cache@v2
+        with:
+          shared-key: "craftpdf-windows-release"
+
+      - name: Install Inno Setup
+        run: choco install innosetup -y --no-progress
+
+      - name: Determine Version
+        id: version_step
+        shell: pwsh
+        run: |
+          if ("${{ github.event.inputs.tag_name }}" -ne "") {
+            $tag = "${{ github.event.inputs.tag_name }}"
+          } elseif ("${{ github.ref_name }}" -match "^v") {
+            $tag = "${{ github.ref_name }}"
+          } else {
+            $tag = "v0.8.1"
+          }
+          $cleanVersion = $tag.TrimStart('v')
+          Write-Output "version=$cleanVersion" >> $env:GITHUB_OUTPUT
+          Write-Output "tag=$tag" >> $env:GITHUB_OUTPUT
+          Write-Host "Target Version: $cleanVersion | Tag: $tag" -ForegroundColor Green
+
+      - name: Build PDFix & Windows Installer
+        shell: pwsh
+        run: |
+          $ver = "${{ steps.version_step.outputs.version }}"
+          & pwsh packaging/windows/build-installer.ps1 -Version $ver
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version_step.outputs.tag }}
+          name: "PDFix ${{ steps.version_step.outputs.tag }}"
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+          files: |
+            dist/PDFix-Setup-v${{ steps.version_step.outputs.version }}-x64.exe
+            dist/PDFix-Setup.exe
+            dist/PDFix.exe
+            dist/CraftPDF-Setup-v${{ steps.version_step.outputs.version }}-x64.exe
+            dist/CraftPDF-Setup.exe
+            dist/CraftPDF.exe
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
