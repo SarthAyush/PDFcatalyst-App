@@ -25,16 +25,5 @@ $cert = New-SelfSignedCertificate `
     -NotAfter (Get-Date).AddYears(5) `
     -FriendlyName "PDFix Code Signing (Sarthak)"
 
-$tempCer = Join-Path ([IO.Path]::GetTempPath()) "pdfix-$($cert.Thumbprint).cer"
-Export-Certificate -Cert $cert -FilePath $tempCer | Out-Null
-
-try {
-    Import-Certificate -FilePath $tempCer -CertStoreLocation "Cert:\CurrentUser\Root" | Out-Null
-    Import-Certificate -FilePath $tempCer -CertStoreLocation "Cert:\CurrentUser\TrustedPublisher" | Out-Null
-    Write-Host "Certificate installed into CurrentUser Root and TrustedPublisher stores." -ForegroundColor Green
-} finally {
-    if (Test-Path $tempCer) { Remove-Item $tempCer -Force -ErrorAction SilentlyContinue }
-}
-
-Write-Host "Created and trusted Code Signing Certificate: $($cert.Thumbprint)" -ForegroundColor Green
+Write-Host "Created Code Signing Certificate in CurrentUser\My: $($cert.Thumbprint)" -ForegroundColor Green
 return $cert
