@@ -1,4 +1,4 @@
-; Script generated for CraftPDF Windows Installer
+; Script generated for PDFCatalyst Windows Installer
 ; Designed for SarthAyush
 
 #define MyAppName "PDFCatalyst"
@@ -22,7 +22,7 @@ DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
 OutputDir=..\..\dist
 OutputBaseFilename=PDFCatalyst-Setup-v{#MyAppVersion}-x64
-SetupIconFile=..\..\assets\app-icon\craftpdf.ico
+SetupIconFile=..\..\assets\app-icon\pdfcatalyst.ico
 Compression=lzma2/ultra64
 SolidCompression=yes
 WizardStyle=modern
@@ -40,29 +40,29 @@ Name: "fileassoc"; Description: "Register PDFCatalyst as a PDF reader"; GroupDes
 
 [Files]
 Source: "..\..\target\release\pdfcraft.exe"; DestDir: "{app}"; DestName: "{#MyAppExeName}"; Flags: ignoreversion
-Source: "..\..\assets\app-icon\craftpdf.ico"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\assets\app-icon\craftpdf-document.ico"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\..\assets\app-icon\pdfcatalyst.ico"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\..\assets\app-icon\pdfcatalyst-document.ico"; DestDir: "{app}"; Flags: ignoreversion
 
 [Icons]
-Name: "{autoprograms}\{#MyAppName}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; IconFilename: "{app}\craftpdf.ico"
-Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; IconFilename: "{app}\craftpdf.ico"; Tasks: desktopicon
+Name: "{autoprograms}\{#MyAppName}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; IconFilename: "{app}\pdfcatalyst.ico"
+Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; IconFilename: "{app}\pdfcatalyst.ico"; Tasks: desktopicon
 
 [Registry]
 ; Register .pdf file handler
 Root: HKA; Subkey: "Software\Classes\.pdf\OpenWithProgids"; ValueType: string; ValueName: "PDFCatalyst.Document"; Tasks: fileassoc; Flags: uninsdeletevalue
 Root: HKA; Subkey: "Software\Classes\PDFCatalyst.Document"; ValueType: string; ValueData: "PDF Document"; Tasks: fileassoc; Flags: uninsdeletekey
-Root: HKA; Subkey: "Software\Classes\PDFCatalyst.Document\DefaultIcon"; ValueType: string; ValueData: "{app}\craftpdf-document.ico,0"; Tasks: fileassoc
+Root: HKA; Subkey: "Software\Classes\PDFCatalyst.Document\DefaultIcon"; ValueType: string; ValueData: "{app}\pdfcatalyst-document.ico,0"; Tasks: fileassoc
 Root: HKA; Subkey: "Software\Classes\PDFCatalyst.Document\shell\open\command"; ValueType: string; ValueData: """{app}\{#MyAppExeName}"" ""%1"""; Tasks: fileassoc
 
 ; Context menu item: "Edit with PDFCatalyst"
 Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.pdf\shell\PDFCatalyst"; ValueType: string; ValueData: "Edit with PDFCatalyst"; Tasks: contextmenu; Flags: uninsdeletekey
-Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.pdf\shell\PDFCatalyst"; ValueType: string; ValueName: "Icon"; ValueData: "{app}\craftpdf.ico"; Tasks: contextmenu
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.pdf\shell\PDFCatalyst"; ValueType: string; ValueName: "Icon"; ValueData: "{app}\pdfcatalyst.ico"; Tasks: contextmenu
 Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.pdf\shell\PDFCatalyst\command"; ValueType: string; ValueData: """{app}\{#MyAppExeName}"" ""%1"""; Tasks: contextmenu
 
 ; Capabilities registration for Windows Settings -> Default Apps
 Root: HKA; Subkey: "Software\PDFCatalyst\Capabilities"; ValueType: string; ValueName: "ApplicationName"; ValueData: "{#MyAppName}"; Flags: uninsdeletekey
 Root: HKA; Subkey: "Software\PDFCatalyst\Capabilities"; ValueType: string; ValueName: "ApplicationDescription"; ValueData: "PDFCatalyst PDF Workbench (Configured by Sarthak)"
-Root: HKA; Subkey: "Software\PDFCatalyst\Capabilities"; ValueType: string; ValueName: "ApplicationIcon"; ValueData: "{app}\craftpdf.ico,0"
+Root: HKA; Subkey: "Software\PDFCatalyst\Capabilities"; ValueType: string; ValueName: "ApplicationIcon"; ValueData: "{app}\pdfcatalyst.ico,0"
 Root: HKA; Subkey: "Software\PDFCatalyst\Capabilities\FileAssociations"; ValueType: string; ValueName: ".pdf"; ValueData: "PDFCatalyst.Document"
 Root: HKA; Subkey: "Software\RegisteredApplications"; ValueType: string; ValueName: "{#MyAppName}"; ValueData: "Software\PDFCatalyst\Capabilities"; Flags: uninsdeletevalue
 

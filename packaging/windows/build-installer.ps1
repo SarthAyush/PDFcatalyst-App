@@ -34,7 +34,7 @@ if (-not $ISCC) {
 Write-Host "Found ISCC at: $ISCC" -ForegroundColor Gray
 
 Write-Host "==> Step 3: Compiling Installer with $ISCC (Version: $Version)..." -ForegroundColor Cyan
-$IssPath = Join-Path $PSScriptRoot 'craftpdf.iss'
+$IssPath = Join-Path $PSScriptRoot 'pdfcatalyst.iss'
 & $ISCC "/DMyAppVersion=$Version" $IssPath
 
 $DistDir = Join-Path $Root 'dist'

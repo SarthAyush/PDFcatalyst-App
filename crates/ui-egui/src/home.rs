@@ -341,8 +341,8 @@ pub fn show(app: &mut PdfCraftApp, ui: &mut egui::Ui) {
                         let img_size = (86.0 * (1.0 + pulse)).max(10.0);
                         let img_rect = Rect::from_center_size(float_center, vec2(img_size, img_size));
                         let image = egui::Image::from_bytes(
-                            "bytes://pdfcraft-hero-anim-transparent.png",
-                            include_bytes!("../../../assets/app-icon/craftpdf-transparent.png"),
+                            "bytes://pdfcatalyst-hero-anim-transparent.png",
+                            include_bytes!("../../../assets/app-icon/pdfcatalyst-transparent.png"),
                         )
                         .fit_to_exact_size(vec2(img_size, img_size));
                         image.paint_at(ui, img_rect);

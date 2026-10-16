@@ -11,16 +11,16 @@ mod windows_manifest;
 
 fn main() {
     println!("cargo:rerun-if-changed=build.rs");
-    println!("cargo:rerun-if-changed=../../assets/app-icon/craftpdf.ico");
-    println!("cargo:rerun-if-changed=../../assets/app-icon/craftpdf-document.ico");
+    println!("cargo:rerun-if-changed=../../assets/app-icon/pdfcatalyst.ico");
+    println!("cargo:rerun-if-changed=../../assets/app-icon/pdfcatalyst-document.ico");
     println!("cargo:rerun-if-changed=src/windows_manifest.rs");
     println!("cargo:rerun-if-env-changed=PDFCRAFT_REQUIRE_WINRES");
     if std::env::var("CARGO_CFG_TARGET_OS").as_deref() != Ok("windows") {
         return;
     }
     let mut res = winresource::WindowsResource::new();
-    res.set_icon("../../assets/app-icon/craftpdf.ico")
-        .set_icon_with_id("../../assets/app-icon/craftpdf-document.ico", "2")
+    res.set_icon("../../assets/app-icon/pdfcatalyst.ico")
+        .set_icon_with_id("../../assets/app-icon/pdfcatalyst-document.ico", "2")
         .set_manifest(windows_manifest::WINDOWS_MANIFEST)
         .set("ProductName", "PDFCatalyst")
         .set("FileDescription", "PDFCatalyst")
