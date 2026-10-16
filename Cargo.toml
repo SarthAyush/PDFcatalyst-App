@@ -2,7 +2,7 @@
 resolver = "3"
 members = ["crates/*", "apps/*", "xtask"]
 exclude = ["vendor"]
-default-members = ["crates/*", "apps/pdfcraft", "apps/pdfcraft-cli", "xtask"]
+default-members = ["crates/*", "apps/pdfcatalyst", "apps/pdfcatalyst-cli", "xtask"]
 
 [workspace.package]
 version = "1.0.0"

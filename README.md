@@ -116,9 +116,9 @@ PDFCatalyst is built as a clean, highly modular Rust workspace:
 
 | Crate | Responsibility |
 | :--- | :--- |
-| **`apps/pdfcraft`** | Native desktop shell (`eframe` / `wgpu`) for Windows, macOS, and Linux |
-| **`apps/pdfcraft-cli`** | Headless CLI tool for batch conversions, merges, metadata audits, and automation |
-| **`apps/pdfcraft-web`** | WebAssembly (WASM) browser distribution |
+| **`apps/pdfcatalyst`** | Native desktop shell (`eframe` / `wgpu`) for Windows, macOS, and Linux |
+| **`apps/pdfcatalyst-cli`** | Headless CLI tool for batch conversions, merges, metadata audits, and automation |
+| **`apps/pdfcatalyst-web`** | WebAssembly (WASM) browser distribution |
 | **`crates/ui-egui`** | Complete graphical user interface, tools catalog, inspector panels, and theme engine |
 | **`crates/engine`** | Document model, command dispatch, undo history, and transaction lifecycle |
 | **`crates/render`** | Vector and raster PDF page rendering engine |
