@@ -10,7 +10,7 @@ edition = "2024"
 license = "MIT OR Apache-2.0"
 rust-version = "1.95"
 authors = ["Sarthak <sarthak.saxena.knp@gmail.com>"]
-repository = "https://github.com/SarthAyush/PDFix-App"
+repository = "https://github.com/SarthAyush/PDFcatalyst-App"
 
 [workspace.dependencies]
 # Shared frontend components; engines remain independent of egui.

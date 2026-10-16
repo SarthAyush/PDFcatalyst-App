@@ -23,7 +23,7 @@ fn github_button_in_the_top_bar_opens_github() {
     h.get_by_label("GitHub").click();
     h.run_steps(2);
     assert_eq!(h.state().last_opened_url.as_deref(), Some(links::GITHUB));
-    assert_eq!(links::GITHUB, "https://github.com/SarthAyush/PDFix-App");
+    assert_eq!(links::GITHUB, "https://github.com/SarthAyush/PDFcatalyst-App");
 }
 
 #[test]

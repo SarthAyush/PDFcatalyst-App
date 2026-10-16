@@ -7,7 +7,7 @@ use egui::{Align, Color32, CornerRadius, Layout, Stroke};
 use crate::{PdfCraftApp, theme, widgets};
 
 /// Where every PDFCatalyst release is listed.
-pub const RELEASES_PAGE: &str = "https://github.com/SarthAyush/PDFix-App/releases";
+pub const RELEASES_PAGE: &str = "https://github.com/SarthAyush/PDFcatalyst-App/releases";
 
 /// The latest published release.
 #[derive(Clone, Debug, PartialEq, Eq)]

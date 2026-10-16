@@ -1136,7 +1136,7 @@ fn dialogs(app: &mut PdfCraftApp, ctx: &egui::Context) {
                         ui.add_space(10.0);
                         ui.horizontal(|ui| {
                             if widgets::icon_pill(ui, "github", "Sarthak Saxena on GitHub", true).clicked() {
-                                app.open_url("https://github.com/SarthAyush/PDFix-App");
+                                app.open_url("https://github.com/SarthAyush/PDFcatalyst-App");
                             }
                         });
                         ui.add_space(10.0);

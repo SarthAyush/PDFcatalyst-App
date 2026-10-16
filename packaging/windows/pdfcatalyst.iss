@@ -6,7 +6,7 @@
   #define MyAppVersion "1.0.0"
 #endif
 #define MyAppPublisher "Sarthak"
-#define MyAppURL "https://github.com/SarthAyush/PDFix-App"
+#define MyAppURL "https://github.com/SarthAyush/PDFcatalyst-App"
 #define MyAppExeName "PDFCatalyst.exe"
 
 [Setup]
@@ -39,7 +39,7 @@ Name: "contextmenu"; Description: "Add 'Edit with PDFCatalyst' to PDF right-clic
 Name: "fileassoc"; Description: "Register PDFCatalyst as a PDF reader"; GroupDescription: "File Associations:"
 
 [Files]
-Source: "..\..\target\release\pdfcraft.exe"; DestDir: "{app}"; DestName: "{#MyAppExeName}"; Flags: ignoreversion
+Source: "..\..\target\release\PDFCatalyst.exe"; DestDir: "{app}"; DestName: "{#MyAppExeName}"; Flags: ignoreversion
 Source: "..\..\assets\app-icon\pdfcatalyst.ico"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\..\assets\app-icon\pdfcatalyst-document.ico"; DestDir: "{app}"; Flags: ignoreversion
 

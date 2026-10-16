@@ -15,7 +15,7 @@ $Root = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
 Write-Host "==> Step 1: Compiling PDFCatalyst (Release build)..." -ForegroundColor Cyan
 Push-Location $Root
 try {
-    cargo build --release -p pdfcraft
+    cargo build --release -p pdfcraft --bin PDFCatalyst
 } finally {
     Pop-Location
 }
@@ -70,7 +70,7 @@ $SignToolCandidates = @(
 $SignTool = $SignToolCandidates | Select-Object -First 1
 if ($SignTool) {
     Write-Host "==> Signing binaries with Authenticode Certificate via $SignTool..." -ForegroundColor Cyan
-    $AppExe = Join-Path $Root 'target\release\pdfcraft.exe'
+    $AppExe = Join-Path $Root 'target\release\PDFCatalyst.exe'
     if (Test-Path $AppExe) {
         & $SignTool sign /v /fd SHA256 /a /n "PDFCatalyst" $AppExe
     }
@@ -81,7 +81,7 @@ if ($SignTool) {
 
 if (Test-Path $VersionedExe) {
     Copy-Item $VersionedExe $StandardSetup -Force
-    Copy-Item (Join-Path $Root 'target\release\pdfcraft.exe') $PortableExe -Force
+    Copy-Item (Join-Path $Root 'target\release\PDFCatalyst.exe') $PortableExe -Force
     
     # Also stage legacy named binaries so both names exist in dist
     Copy-Item $VersionedExe (Join-Path $DistDir "CraftPDF-Setup-v$Version-x64.exe") -Force

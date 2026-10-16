@@ -18,11 +18,11 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/SarthAyush/PDFix-App/releases/download/v1.0.0/PDFCatalyst-Setup-v1.0.0-x64.exe">
+  <a href="https://github.com/SarthAyush/PDFcatalyst-App/releases/download/v1.0.0/PDFCatalyst-Setup-v1.0.0-x64.exe">
     <img src="https://img.shields.io/badge/Download-PDFCatalyst%20Installer%20(.EXE)-0078D4?style=for-the-badge&logo=windows&logoColor=white" alt="Download Direct EXE" height="42">
   </a>
   &nbsp;&nbsp;
-  <a href="https://github.com/SarthAyush/PDFix-App/releases/tag/v1.0.0">
+  <a href="https://github.com/SarthAyush/PDFcatalyst-App/releases/tag/v1.0.0">
     <img src="https://img.shields.io/badge/Release-v1.0.0%20Notes-238636?style=for-the-badge&logo=github&logoColor=white" alt="v1.0.0 Release" height="42">
   </a>
 </p>
@@ -33,8 +33,8 @@
 
 | Platform | Package | Direct Download Link |
 | :--- | :--- | :--- |
-| **Windows (x64)** | **Official Windows Installer (`.exe`)** | [**Download PDFCatalyst-Setup-v1.0.0-x64.exe**](https://github.com/SarthAyush/PDFix-App/releases/download/v1.0.0/PDFCatalyst-Setup-v1.0.0-x64.exe) |
-| **All Platforms** | **Release Assets & Notes** | [**View GitHub Releases**](https://github.com/SarthAyush/PDFix-App/releases) |
+| **Windows (x64)** | **Official Windows Installer (`.exe`)** | [**Download PDFCatalyst-Setup-v1.0.0-x64.exe**](https://github.com/SarthAyush/PDFcatalyst-App/releases/download/v1.0.0/PDFCatalyst-Setup-v1.0.0-x64.exe) |
+| **All Platforms** | **Release Assets & Notes** | [**View GitHub Releases**](https://github.com/SarthAyush/PDFcatalyst-App/releases) |
 
 ---
 
@@ -94,8 +94,8 @@ No accounts, no telemetry, no cloud lock-in. All processing, OCR, conversions, s
 
 Clone the repository:
 ```bash
-git clone https://github.com/SarthAyush/PDFix-App.git
-cd PDFix-App/pdfcraft
+git clone https://github.com/SarthAyush/PDFcatalyst-App.git
+cd PDFcatalyst-App/pdfcraft
 ```
 
 Run the desktop application:

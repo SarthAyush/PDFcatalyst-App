@@ -70,7 +70,7 @@ pdfcraft-cli run    --script steps.json [--root DIR]      [{\"tool\": \"doc_open
     "\
 pdfcraft-cli ui     --control FILE <method> [key=value …] [--out shot.png]
                                                            drive a running app started with --control FILE
-help and feedback: https://github.com/SarthAyush/PDFix-App/issues"
+help and feedback: https://github.com/SarthAyush/PDFcatalyst-App/issues"
 );
 
 fn main() -> ExitCode {

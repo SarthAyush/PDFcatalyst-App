@@ -6,9 +6,9 @@ use std::path::{Path, PathBuf};
 
 pub const APP: &str = "PDFCatalyst";
 
-pub const GITHUB: &str = "https://github.com/SarthAyush/PDFix-App";
-pub const RELEASES: &str = "https://github.com/SarthAyush/PDFix-App/releases";
-pub const ISSUES: &str = "https://github.com/SarthAyush/PDFix-App/issues";
+pub const GITHUB: &str = "https://github.com/SarthAyush/PDFcatalyst-App";
+pub const RELEASES: &str = "https://github.com/SarthAyush/PDFcatalyst-App/releases";
+pub const ISSUES: &str = "https://github.com/SarthAyush/PDFcatalyst-App/issues";
 pub const AUTHOR: &str = "https://github.com/SarthAyush";
 
 pub const DISCORD: &str = GITHUB;
@@ -524,7 +524,7 @@ mod tests {
 
     #[test]
     fn urls_follow_the_artcraft_scheme() {
-        assert_eq!(super::GITHUB, "https://github.com/SarthAyush/PDFix-App");
+        assert_eq!(super::GITHUB, "https://github.com/SarthAyush/PDFcatalyst-App");
         for l in super::LINKS {
             assert!(l.url.starts_with("https://"), "{}", l.url);
             assert!(crate::commands::command(l.command).is_some(), "{} is a registered command", l.command);

@@ -4,7 +4,7 @@ use std::time::Duration;
 
 use pdfcraft_ui_egui::updates::{RELEASES_PAGE, Release};
 
-const LATEST: &str = "https://api.github.com/repos/SarthAyush/PDFix-App/releases/latest";
+const LATEST: &str = "https://api.github.com/repos/SarthAyush/PDFcatalyst-App/releases/latest";
 
 /// The latest release. The answer is untrusted: its size is capped, and only a page under
 /// [`RELEASES_PAGE`] is ever offered for download (anything else falls back to that list).
@@ -52,7 +52,7 @@ pub fn download_update(
         Some(url) => url,
         None => {
             let ver = release.version.trim_start_matches(['v', 'V']);
-            format!("https://github.com/SarthAyush/PDFix-App/releases/download/{}/PDFCatalyst-Setup-v{}-x64.exe", release.version, ver)
+            format!("https://github.com/SarthAyush/PDFcatalyst-App/releases/download/{}/PDFCatalyst-Setup-v{}-x64.exe", release.version, ver)
         }
     };
 
@@ -237,9 +237,9 @@ mod tests {
 
     #[test]
     fn answers_are_read_and_only_our_release_pages_are_offered() {
-        let r = parse(r#"{"tag_name":"v0.2.0","html_url":"https://github.com/SarthAyush/PDFix-App/releases/tag/v0.2.0"}"#).unwrap();
-        assert_eq!(r, Release::new("v0.2.0", "https://github.com/SarthAyush/PDFix-App/releases/tag/v0.2.0"));
-        for elsewhere in ["https://example.com/pdfcraft.exe", "https://github.com/SarthAyush/PDFix-App/releases.evil/x", "javascript:alert(1)"] {
+        let r = parse(r#"{"tag_name":"v0.2.0","html_url":"https://github.com/SarthAyush/PDFcatalyst-App/releases/tag/v0.2.0"}"#).unwrap();
+        assert_eq!(r, Release::new("v0.2.0", "https://github.com/SarthAyush/PDFcatalyst-App/releases/tag/v0.2.0"));
+        for elsewhere in ["https://example.com/pdfcraft.exe", "https://github.com/SarthAyush/PDFcatalyst-App/releases.evil/x", "javascript:alert(1)"] {
             let r = parse(&format!(r#"{{"tag_name":"v9.9.9","html_url":"{elsewhere}"}}"#)).unwrap();
             assert_eq!(r.url, RELEASES_PAGE, "{elsewhere}");
         }
