@@ -58,9 +58,9 @@ pub fn show(app: &mut PdfCraftApp, ctx: &egui::Context) {
         }
         let mut label = pdfcraft_engine::commands::current_label(spec, &app.session, active);
         if spec.id == "help.about" {
-            label = "About PDFix".to_string();
+            label = "About PDFCatalyst".to_string();
         }
-        let translated = if spec.id == "help.about" { "About PDFix".to_string() } else { crate::i18n::command_label(&label) };
+        let translated = if spec.id == "help.about" { "About PDFCatalyst".to_string() } else { crate::i18n::command_label(&label) };
         if let Some(s) = score(&translated, &q).or_else(|| score(&label, &q)).or_else(|| score(spec.id, &q).map(|s| s + 50)) {
             hits.push((
                 s,

@@ -1,11 +1,11 @@
 <#
 .SYNOPSIS
-  Ensures a valid Authenticode Code-Signing Certificate exists and is trusted for PDFix.
+  Ensures a valid Authenticode Code-Signing Certificate exists and is trusted for PDFCatalyst.
 #>
 [CmdletBinding()]
 param()
 
-$Subject = 'CN=PDFix, O=Sarthak, OU=PDF Engineering'
+$Subject = 'CN=PDFCatalyst, O=Sarthak, OU=PDF Engineering'
 
 # Check if already exists and valid
 $existing = Get-ChildItem Cert:\CurrentUser\My -CodeSigningCert -ErrorAction SilentlyContinue |
@@ -23,7 +23,7 @@ $cert = New-SelfSignedCertificate `
     -Subject $Subject `
     -CertStoreLocation "Cert:\CurrentUser\My" `
     -NotAfter (Get-Date).AddYears(5) `
-    -FriendlyName "PDFix Code Signing (Sarthak)"
+    -FriendlyName "PDFCatalyst Code Signing (Sarthak)"
 
 Write-Host "Created Code Signing Certificate in CurrentUser\My: $($cert.Thumbprint)" -ForegroundColor Green
 return $cert

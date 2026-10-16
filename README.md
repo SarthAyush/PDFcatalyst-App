@@ -1,4 +1,4 @@
-# PDFix
+# PDFCatalyst
 
 <p align="center">
   <b>The PDF Engineering Workbench — Rebuilt from the ground up in pure Rust.</b><br>
@@ -18,8 +18,8 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/SarthAyush/PDFix-App/releases/download/v1.0.0/PDFix-Setup-v1.0.0-x64.exe">
-    <img src="https://img.shields.io/badge/Download-PDFix%20Installer%20(.EXE)-0078D4?style=for-the-badge&logo=windows&logoColor=white" alt="Download Direct EXE" height="42">
+  <a href="https://github.com/SarthAyush/PDFix-App/releases/download/v1.0.0/PDFCatalyst-Setup-v1.0.0-x64.exe">
+    <img src="https://img.shields.io/badge/Download-PDFCatalyst%20Installer%20(.EXE)-0078D4?style=for-the-badge&logo=windows&logoColor=white" alt="Download Direct EXE" height="42">
   </a>
   &nbsp;&nbsp;
   <a href="https://github.com/SarthAyush/PDFix-App/releases/tag/v1.0.0">
@@ -33,7 +33,7 @@
 
 | Platform | Package | Direct Download Link |
 | :--- | :--- | :--- |
-| **Windows (x64)** | **Official Windows Installer (`.exe`)** | [**Download PDFix-Setup-v1.0.0-x64.exe**](https://github.com/SarthAyush/PDFix-App/releases/download/v1.0.0/PDFix-Setup-v1.0.0-x64.exe) |
+| **Windows (x64)** | **Official Windows Installer (`.exe`)** | [**Download PDFCatalyst-Setup-v1.0.0-x64.exe**](https://github.com/SarthAyush/PDFix-App/releases/download/v1.0.0/PDFCatalyst-Setup-v1.0.0-x64.exe) |
 | **All Platforms** | **Release Assets & Notes** | [**View GitHub Releases**](https://github.com/SarthAyush/PDFix-App/releases) |
 
 ---
@@ -112,7 +112,7 @@ cargo run --release -p pdfcraft-cli -- --help
 
 ## Architecture
 
-PDFix is built as a clean, highly modular Rust workspace:
+PDFCatalyst is built as a clean, highly modular Rust workspace:
 
 | Crate | Responsibility |
 | :--- | :--- |

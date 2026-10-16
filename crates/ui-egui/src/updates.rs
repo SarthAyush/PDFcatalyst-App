@@ -6,7 +6,7 @@ use egui::{Align, Color32, CornerRadius, Layout, Stroke};
 
 use crate::{PdfCraftApp, theme, widgets};
 
-/// Where every CraftPDF release is listed.
+/// Where every PDFCatalyst release is listed.
 pub const RELEASES_PAGE: &str = "https://github.com/SarthAyush/PDFix-App/releases";
 
 /// The latest published release.
@@ -18,7 +18,7 @@ pub struct Release {
     pub url: String,
     /// Direct asset download URL (e.g. for installer .exe).
     pub download_url: Option<String>,
-    /// Filename of the asset (e.g. CraftPDF-Setup-v0.8.1-x64.exe).
+    /// Filename of the asset (e.g. PDFCatalyst-Setup-v0.8.1-x64.exe).
     pub asset_name: Option<String>,
 }
 
@@ -288,7 +288,7 @@ pub(crate) fn dialog(app: &mut PdfCraftApp, ctx: &egui::Context) {
             }
             Check::Done(Ok(r)) if is_newer(&r.version, current) => {
                 let version = r.version.trim_start_matches(['v', 'V']);
-                ui.label(egui::RichText::new(format!("PDFix {version} is available.")).strong());
+                ui.label(egui::RichText::new(format!("PDFCatalyst {version} is available.")).strong());
                 ui.label(
                     egui::RichText::new(format!("Current version installed: {current}"))
                         .color(t.text_muted),
@@ -340,7 +340,7 @@ pub(crate) fn dialog(app: &mut PdfCraftApp, ctx: &egui::Context) {
                 }
             }
             Check::Done(Ok(_)) => {
-                ui.label(egui::RichText::new(crate::i18n::fmt(tl!("PDFix {c} is up to date."), &[("c", current)])).font(theme::semibold(14.0)).color(t.text));
+                ui.label(egui::RichText::new(crate::i18n::fmt(tl!("PDFCatalyst {c} is up to date."), &[("c", current)])).font(theme::semibold(14.0)).color(t.text));
             }
             Check::Done(Err(e)) => {
                 ui.label(crate::i18n::fmt(tl!("Couldn't check for updates: {e}"), &[("e", &e.to_string())]));
@@ -355,7 +355,7 @@ pub(crate) fn dialog(app: &mut PdfCraftApp, ctx: &egui::Context) {
         }
         ui.add_space(10.0);
         ui.label(
-            egui::RichText::new("PDFix updates seamlessly without external redirects.")
+            egui::RichText::new("PDFCatalyst updates seamlessly without external redirects.")
                 .color(t.text_muted)
                 .small(),
         );

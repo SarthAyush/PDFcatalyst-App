@@ -1,6 +1,6 @@
 [package]
 name = "pdfcraft"
-description = "PDFix — High-performance personal PDF engineering workbench (Configured by Sarthak)"
+description = "PDFCatalyst — High-performance personal PDF engineering workbench (Configured by Sarthak)"
 version.workspace = true
 edition.workspace = true
 license.workspace = true

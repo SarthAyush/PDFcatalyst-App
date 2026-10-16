@@ -1007,7 +1007,7 @@ fn dialogs(app: &mut PdfCraftApp, ctx: &egui::Context) {
                     ui.label(egui::RichText::new(tl!("Recover unsaved documents?")).font(theme::semibold(18.0)));
                 });
                 ui.add_space(6.0);
-                ui.label("PDFix didn't shut down normally. These documents had changes that were autosaved:");
+                ui.label("PDFCatalyst didn't shut down normally. These documents had changes that were autosaved:");
                 ui.add_space(8.0);
                 let now = std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).map(|d| d.as_secs()).unwrap_or(0);
                 egui::Grid::new("recoverable").num_columns(2).spacing([18.0, 6.0]).show(ui, |ui| {
@@ -1090,7 +1090,7 @@ fn dialogs(app: &mut PdfCraftApp, ctx: &egui::Context) {
                             crate::icons::paint(ui, rect, "file-text", 36.0, t.accent);
                             ui.add_space(8.0);
                             ui.vertical(|ui| {
-                                ui.label(egui::RichText::new("PDFix").font(theme::semibold(24.0)).color(t.text));
+                                ui.label(egui::RichText::new("PDFCatalyst").font(theme::semibold(24.0)).color(t.text));
                                 let v_text = format!("v{} · Configured by Sarthak", pdfcraft_engine::build_info::version());
                                 ui.label(egui::RichText::new(v_text).font(theme::medium(12.0)).color(t.accent_text));
                             });

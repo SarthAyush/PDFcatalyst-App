@@ -52,13 +52,13 @@ pub fn download_update(
         Some(url) => url,
         None => {
             let ver = release.version.trim_start_matches(['v', 'V']);
-            format!("https://github.com/SarthAyush/PDFix-App/releases/download/{}/PDFix-Setup-v{}-x64.exe", release.version, ver)
+            format!("https://github.com/SarthAyush/PDFix-App/releases/download/{}/PDFCatalyst-Setup-v{}-x64.exe", release.version, ver)
         }
     };
 
     let filename = release.asset_name.unwrap_or_else(|| {
         let ver = release.version.trim_start_matches(['v', 'V']);
-        format!("CraftPDF-Setup-v{}-x64.exe", ver)
+        format!("PDFCatalyst-Setup-v{}-x64.exe", ver)
     });
 
     let roots = match os_roots() {

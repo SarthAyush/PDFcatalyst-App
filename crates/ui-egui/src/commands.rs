@@ -691,7 +691,7 @@ pub(crate) fn registry_menu(app: &mut PdfCraftApp, ui: &mut egui::Ui, menu: &str
         for (id, label) in [
             ("help.shortcuts", "Keyboard shortcuts"),
             ("help.check_updates", "Check for updates…"),
-            ("help.about", "About PDFix"),
+            ("help.about", "About PDFCatalyst"),
         ] {
             if let Some(spec) = commands::command(id) {
                 let shortcut = spec.shortcut.map(|s| shortcut_label(ui.ctx(), s)).unwrap_or_default();

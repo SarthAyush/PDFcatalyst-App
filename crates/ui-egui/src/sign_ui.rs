@@ -894,9 +894,9 @@ fn sign_as(ui: &mut egui::Ui, app: &mut PdfCraftApp, t: &Tokens) -> bool {
             ui.label("");
             ui.label(
                 egui::RichText::new(if entry.path.starts_with("windows:") {
-                    "The key is in the Windows certificate store, which may ask to allow PDFix to use it."
+                    "The key is in the Windows certificate store, which may ask to allow PDFCatalyst to use it."
                 } else {
-                    "The key is in the macOS Keychain, which may ask to allow PDFix to use it."
+                    "The key is in the macOS Keychain, which may ask to allow PDFCatalyst to use it."
                 })
                 .small()
                 .color(t.text_muted),

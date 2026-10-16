@@ -1,8 +1,8 @@
 <#
 .SYNOPSIS
-  Builds CraftPDF release binary and creates the Windows Desktop Installer (.exe).
+  Builds PDFCatalyst release binary and creates the Windows Desktop Installer (.exe).
 .EXAMPLE
-  pwsh packaging/windows/build-installer.ps1 -Version "0.7.1"
+  pwsh packaging/windows/build-installer.ps1 -Version "1.0.0"
 #>
 [CmdletBinding()]
 param(
@@ -12,7 +12,7 @@ param(
 $ErrorActionPreference = 'Stop'
 $Root = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
 
-Write-Host "==> Step 1: Compiling CraftPDF (Release build)..." -ForegroundColor Cyan
+Write-Host "==> Step 1: Compiling PDFCatalyst (Release build)..." -ForegroundColor Cyan
 Push-Location $Root
 try {
     cargo build --release -p pdfcraft
@@ -40,7 +40,7 @@ $IssPath = Join-Path $PSScriptRoot 'craftpdf.iss'
 $DistDir = Join-Path $Root 'dist'
 New-Item -ItemType Directory -Force -Path $DistDir | Out-Null
 
-$VersionedExe = Join-Path $DistDir "PDFix-Setup-v$Version-x64.exe"
+$VersionedExe = Join-Path $DistDir "PDFCatalyst-Setup-v$Version-x64.exe"
 if (-not (Test-Path $VersionedExe)) {
     $LegacyExe = Join-Path $DistDir "CraftPDF-Setup-v$Version-x64.exe"
     if (Test-Path $LegacyExe) {
@@ -48,8 +48,8 @@ if (-not (Test-Path $VersionedExe)) {
     }
 }
 
-$StandardSetup = Join-Path $DistDir "PDFix-Setup.exe"
-$PortableExe = Join-Path $DistDir "PDFix.exe"
+$StandardSetup = Join-Path $DistDir "PDFCatalyst-Setup.exe"
+$PortableExe = Join-Path $DistDir "PDFCatalyst.exe"
 
 # Ensure certificate exists for signing
 $EnsureCert = Join-Path $PSScriptRoot 'ensure-cert.ps1'
@@ -72,10 +72,10 @@ if ($SignTool) {
     Write-Host "==> Signing binaries with Authenticode Certificate via $SignTool..." -ForegroundColor Cyan
     $AppExe = Join-Path $Root 'target\release\pdfcraft.exe'
     if (Test-Path $AppExe) {
-        & $SignTool sign /v /fd SHA256 /a /n "PDFix" $AppExe
+        & $SignTool sign /v /fd SHA256 /a /n "PDFCatalyst" $AppExe
     }
     if (Test-Path $VersionedExe) {
-        & $SignTool sign /v /fd SHA256 /a /n "PDFix" $VersionedExe
+        & $SignTool sign /v /fd SHA256 /a /n "PDFCatalyst" $VersionedExe
     }
 }
 
@@ -94,8 +94,8 @@ if (Test-Path $VersionedExe) {
     # Also update user's downloads folder if it exists
     $DownloadsPath = [System.IO.Path]::Combine($env:USERPROFILE, "Downloads")
     if (Test-Path $DownloadsPath) {
-        Copy-Item $VersionedExe (Join-Path $DownloadsPath "PDFix-Setup-v$Version-x64.exe") -Force
-        Unblock-File (Join-Path $DownloadsPath "PDFix-Setup-v$Version-x64.exe") -ErrorAction SilentlyContinue
+        Copy-Item $VersionedExe (Join-Path $DownloadsPath "PDFCatalyst-Setup-v$Version-x64.exe") -Force
+        Unblock-File (Join-Path $DownloadsPath "PDFCatalyst-Setup-v$Version-x64.exe") -ErrorAction SilentlyContinue
         # Also unblock any existing old installer in Downloads
         $OldInDownloads = Join-Path $DownloadsPath "CraftPDF-Setup-v$Version-x64.exe"
         if (Test-Path $OldInDownloads) {
@@ -107,4 +107,3 @@ if (Test-Path $VersionedExe) {
     Write-Host "==> Success! Signed Installer created at: $VersionedExe ($size MB)" -ForegroundColor Green
     Write-Host "Staged: $StandardSetup and $PortableExe" -ForegroundColor Green
 }
-

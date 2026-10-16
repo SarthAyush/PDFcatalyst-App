@@ -1,13 +1,13 @@
 ; Script generated for CraftPDF Windows Installer
 ; Designed for SarthAyush
 
-#define MyAppName "PDFix"
+#define MyAppName "PDFCatalyst"
 #ifndef MyAppVersion
   #define MyAppVersion "1.0.0"
 #endif
 #define MyAppPublisher "Sarthak"
 #define MyAppURL "https://github.com/SarthAyush/PDFix-App"
-#define MyAppExeName "PDFix.exe"
+#define MyAppExeName "PDFCatalyst.exe"
 
 [Setup]
 AppId={{D37E6144-8456-4BD3-958B-8D7DF389A9B4}
@@ -21,7 +21,7 @@ DefaultDirName={autopf}\{#MyAppName}
 DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
 OutputDir=..\..\dist
-OutputBaseFilename=PDFix-Setup-v{#MyAppVersion}-x64
+OutputBaseFilename=PDFCatalyst-Setup-v{#MyAppVersion}-x64
 SetupIconFile=..\..\assets\app-icon\craftpdf.ico
 Compression=lzma2/ultra64
 SolidCompression=yes
@@ -35,8 +35,8 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"
-Name: "contextmenu"; Description: "Add 'Edit with PDFix' to PDF right-click context menu"; GroupDescription: "File Explorer Integration:"; Flags: unchecked
-Name: "fileassoc"; Description: "Register PDFix as a PDF reader"; GroupDescription: "File Associations:"
+Name: "contextmenu"; Description: "Add 'Edit with PDFCatalyst' to PDF right-click context menu"; GroupDescription: "File Explorer Integration:"; Flags: unchecked
+Name: "fileassoc"; Description: "Register PDFCatalyst as a PDF reader"; GroupDescription: "File Associations:"
 
 [Files]
 Source: "..\..\target\release\pdfcraft.exe"; DestDir: "{app}"; DestName: "{#MyAppExeName}"; Flags: ignoreversion
@@ -49,22 +49,22 @@ Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; IconFilen
 
 [Registry]
 ; Register .pdf file handler
-Root: HKA; Subkey: "Software\Classes\.pdf\OpenWithProgids"; ValueType: string; ValueName: "PDFix.Document"; Tasks: fileassoc; Flags: uninsdeletevalue
-Root: HKA; Subkey: "Software\Classes\PDFix.Document"; ValueType: string; ValueData: "PDF Document"; Tasks: fileassoc; Flags: uninsdeletekey
-Root: HKA; Subkey: "Software\Classes\PDFix.Document\DefaultIcon"; ValueType: string; ValueData: "{app}\craftpdf-document.ico,0"; Tasks: fileassoc
-Root: HKA; Subkey: "Software\Classes\PDFix.Document\shell\open\command"; ValueType: string; ValueData: """{app}\{#MyAppExeName}"" ""%1"""; Tasks: fileassoc
+Root: HKA; Subkey: "Software\Classes\.pdf\OpenWithProgids"; ValueType: string; ValueName: "PDFCatalyst.Document"; Tasks: fileassoc; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Classes\PDFCatalyst.Document"; ValueType: string; ValueData: "PDF Document"; Tasks: fileassoc; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\PDFCatalyst.Document\DefaultIcon"; ValueType: string; ValueData: "{app}\craftpdf-document.ico,0"; Tasks: fileassoc
+Root: HKA; Subkey: "Software\Classes\PDFCatalyst.Document\shell\open\command"; ValueType: string; ValueData: """{app}\{#MyAppExeName}"" ""%1"""; Tasks: fileassoc
 
-; Context menu item: "Edit with PDFix"
-Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.pdf\shell\PDFix"; ValueType: string; ValueData: "Edit with PDFix"; Tasks: contextmenu; Flags: uninsdeletekey
-Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.pdf\shell\PDFix"; ValueType: string; ValueName: "Icon"; ValueData: "{app}\craftpdf.ico"; Tasks: contextmenu
-Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.pdf\shell\PDFix\command"; ValueType: string; ValueData: """{app}\{#MyAppExeName}"" ""%1"""; Tasks: contextmenu
+; Context menu item: "Edit with PDFCatalyst"
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.pdf\shell\PDFCatalyst"; ValueType: string; ValueData: "Edit with PDFCatalyst"; Tasks: contextmenu; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.pdf\shell\PDFCatalyst"; ValueType: string; ValueName: "Icon"; ValueData: "{app}\craftpdf.ico"; Tasks: contextmenu
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.pdf\shell\PDFCatalyst\command"; ValueType: string; ValueData: """{app}\{#MyAppExeName}"" ""%1"""; Tasks: contextmenu
 
 ; Capabilities registration for Windows Settings -> Default Apps
-Root: HKA; Subkey: "Software\PDFix\Capabilities"; ValueType: string; ValueName: "ApplicationName"; ValueData: "{#MyAppName}"; Flags: uninsdeletekey
-Root: HKA; Subkey: "Software\PDFix\Capabilities"; ValueType: string; ValueName: "ApplicationDescription"; ValueData: "PDFix PDF Workbench (Configured by Sarthak)"
-Root: HKA; Subkey: "Software\PDFix\Capabilities"; ValueType: string; ValueName: "ApplicationIcon"; ValueData: "{app}\craftpdf.ico,0"
-Root: HKA; Subkey: "Software\PDFix\Capabilities\FileAssociations"; ValueType: string; ValueName: ".pdf"; ValueData: "PDFix.Document"
-Root: HKA; Subkey: "Software\RegisteredApplications"; ValueType: string; ValueName: "{#MyAppName}"; ValueData: "Software\PDFix\Capabilities"; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\PDFCatalyst\Capabilities"; ValueType: string; ValueName: "ApplicationName"; ValueData: "{#MyAppName}"; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\PDFCatalyst\Capabilities"; ValueType: string; ValueName: "ApplicationDescription"; ValueData: "PDFCatalyst PDF Workbench (Configured by Sarthak)"
+Root: HKA; Subkey: "Software\PDFCatalyst\Capabilities"; ValueType: string; ValueName: "ApplicationIcon"; ValueData: "{app}\craftpdf.ico,0"
+Root: HKA; Subkey: "Software\PDFCatalyst\Capabilities\FileAssociations"; ValueType: string; ValueName: ".pdf"; ValueData: "PDFCatalyst.Document"
+Root: HKA; Subkey: "Software\RegisteredApplications"; ValueType: string; ValueName: "{#MyAppName}"; ValueData: "Software\PDFCatalyst\Capabilities"; Flags: uninsdeletevalue
 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent

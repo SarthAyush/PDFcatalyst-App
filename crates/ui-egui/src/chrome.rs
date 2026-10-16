@@ -360,7 +360,7 @@ pub fn notification_viewer(app: &mut PdfCraftApp, ctx: &egui::Context) {
                                             ui.label(egui::RichText::new(format!("Version {} is ready to download.", release.version)).font(theme::regular(11.5)).color(t.text));
                                         }
                                     } else {
-                                        ui.label(egui::RichText::new(format!("PDFix v{current_version}")).font(theme::semibold(13.0)).color(t.text));
+                                        ui.label(egui::RichText::new(format!("PDFCatalyst v{current_version}")).font(theme::semibold(13.0)).color(t.text));
                                         ui.label(egui::RichText::new("You are running the latest version.").font(theme::regular(11.5)).color(t.text_muted));
                                     }
                                 });
@@ -409,7 +409,7 @@ pub fn notification_viewer(app: &mut PdfCraftApp, ctx: &egui::Context) {
                         });
 
                     ui.add_space(14.0);
-                    ui.label(egui::RichText::new("What's New in PDFix").font(theme::semibold(13.0)).color(t.text));
+                    ui.label(egui::RichText::new("What's New in PDFCatalyst").font(theme::semibold(13.0)).color(t.text));
                     ui.add_space(6.0);
 
                     // News / Changelog items

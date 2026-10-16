@@ -244,7 +244,7 @@ pub fn show(app: &mut PdfCraftApp, ui: &mut egui::Ui) {
                         ui.allocate_ui_with_layout(vec2(left_width, 0.0), egui::Layout::top_down(egui::Align::Min), |ui| {
                             // 1. App Name
                             ui.horizontal(|ui| {
-                                ui.label(egui::RichText::new("PDFix").font(theme::semibold(32.0)).color(t.text));
+                                ui.label(egui::RichText::new("PDFCatalyst").font(theme::semibold(32.0)).color(t.text));
                                 ui.add_space(8.0);
                                 egui::Frame::NONE
                                     .fill(t.accent_soft)
@@ -692,7 +692,7 @@ pub fn show(app: &mut PdfCraftApp, ui: &mut egui::Ui) {
             });
             ui.add_space(8.0);
             if app.recent.is_empty() {
-                ui.label(egui::RichText::new("Files you open in PDFix appear here. Drop a PDF anywhere to open it.").color(t.text_muted));
+                ui.label(egui::RichText::new("Files you open in PDFCatalyst appear here. Drop a PDF anywhere to open it.").color(t.text_muted));
             }
             let mut open = None;
             let mut remove = None;
@@ -770,7 +770,7 @@ pub fn show(app: &mut PdfCraftApp, ui: &mut egui::Ui) {
                         ui.vertical(|ui| {
                             ui.label(egui::RichText::new("100% Offline & Private by Architecture").font(theme::semibold(14.0)).color(t.text));
                             ui.label(
-                                egui::RichText::new("PDFix works completely offline. No telemetry, no remote analytics, no accounts, and zero cloud processing.")
+                                egui::RichText::new("PDFCatalyst works completely offline. No telemetry, no remote analytics, no accounts, and zero cloud processing.")
                                     .font(theme::regular(12.0))
                                     .color(t.text_muted),
                             );

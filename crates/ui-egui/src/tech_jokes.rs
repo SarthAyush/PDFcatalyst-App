@@ -1,4 +1,4 @@
-//! Technical jokes and dynamic greetings for CraftPDF.
+//! Technical jokes and dynamic greetings for PDFCatalyst.
 
 use std::sync::atomic::{AtomicUsize, Ordering};
 
