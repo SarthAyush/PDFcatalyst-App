@@ -226,125 +226,126 @@ pub fn show(app: &mut PdfCraftApp, ui: &mut egui::Ui) {
             egui::Frame::NONE
                 .fill(t.card)
                 .stroke(Stroke::new(1.5, t.accent.gamma_multiply(0.4)))
-                .corner_radius(CornerRadius::same(16))
-                .inner_margin(egui::Margin::symmetric(24, 20))
+                .corner_radius(CornerRadius::same(18))
+                .shadow(egui::Shadow {
+                    offset: [0, 6],
+                    blur: 24,
+                    spread: 0,
+                    color: Color32::from_black_alpha(if t.dark() { 80 } else { 20 }),
+                })
+                .inner_margin(egui::Margin::symmetric(26, 22))
                 .show(ui, |ui| {
                     ui.set_width(ui.available_width());
+                    ui.ctx().request_repaint();
+
                     ui.horizontal(|ui| {
-                        egui::Frame::NONE
-                            .fill(t.accent_soft)
-                            .corner_radius(CornerRadius::same(6))
-                            .inner_margin(egui::Margin::symmetric(10, 4))
-                            .show(ui, |ui| {
-                                ui.label(
-                                    egui::RichText::new("PDFIX STUDIO 2.0")
-                                        .font(theme::semibold(11.0))
-                                        .color(t.accent_text)
-                                        .extra_letter_spacing(0.6),
-                                );
-                            });
-                        ui.add_space(4.0);
-                        egui::Frame::NONE
-                            .fill(t.hover)
-                            .stroke(Stroke::new(1.0, t.border))
-                            .corner_radius(CornerRadius::same(6))
-                            .inner_margin(egui::Margin::symmetric(8, 4))
-                            .show(ui, |ui| {
-                                ui.label(
-                                    egui::RichText::new(format!("v{}", env!("CARGO_PKG_VERSION")))
-                                        .font(theme::medium(11.0))
-                                        .color(t.text_muted),
-                                );
-                            });
-                        ui.add_space(4.0);
-                        egui::Frame::NONE
-                            .fill(t.hover)
-                            .stroke(Stroke::new(1.0, t.border))
-                            .corner_radius(CornerRadius::same(6))
-                            .inner_margin(egui::Margin::symmetric(8, 4))
-                            .show(ui, |ui| {
-                                ui.label(
-                                    egui::RichText::new("MEMORY-SAFE RUST")
-                                        .font(theme::semibold(11.0))
-                                        .color(t.accent_text),
-                                );
-                            });
-                    });
-                    ui.add_space(8.0);
-                    ui.horizontal(|ui| {
-                        ui.label(egui::RichText::new("PDFix").font(theme::semibold(28.0)).color(t.text));
-                        ui.add_space(8.0);
-                        egui::Frame::NONE
-                            .fill(t.accent_soft)
-                            .corner_radius(CornerRadius::same(6))
-                            .inner_margin(egui::Margin::symmetric(8, 4))
-                            .show(ui, |ui| {
-                                ui.label(
-                                    egui::RichText::new("Configured by Sarthak")
-                                        .font(theme::semibold(11.5))
-                                        .color(t.accent_text),
-                                );
-                            });
-                    });
-                    ui.add_space(2.0);
-                    ui.label(
-                        egui::RichText::new("High-performance personal PDF engineering workbench — local, private, and blazing fast.")
-                            .color(t.text_muted)
-                            .font(theme::regular(14.0)),
-                    );
-                    ui.add_space(4.0);
-                    ui.label(
-                        egui::RichText::new(crate::tech_jokes::dynamic_greeting())
-                            .color(t.accent_text)
-                            .font(theme::medium(13.0)),
-                    );
-                    ui.add_space(8.0);
-                    egui::Frame::NONE
-                        .fill(t.pasteboard)
-                        .stroke(Stroke::new(1.0, t.border))
-                        .corner_radius(CornerRadius::same(8))
-                        .inner_margin(egui::Margin::symmetric(12, 7))
-                        .show(ui, |ui| {
+                        // Left column: App Name, Quotes, Action buttons
+                        let left_width = (ui.available_width() - 150.0).max(280.0);
+                        ui.allocate_ui_with_layout(vec2(left_width, 0.0), egui::Layout::top_down(egui::Align::Min), |ui| {
+                            // 1. App Name
                             ui.horizontal(|ui| {
-                                ui.label(egui::RichText::new("Tech Byte:").font(theme::semibold(12.0)).color(t.accent));
-                                ui.add_space(4.0);
-                                ui.label(egui::RichText::new(crate::tech_jokes::current_joke()).font(theme::regular(12.0)).color(t.text));
-                                ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-                                    if ui.small_button("Next Joke").clicked() {
-                                        crate::tech_jokes::next_joke();
-                                    }
+                                ui.label(egui::RichText::new("PDFix").font(theme::semibold(32.0)).color(t.text));
+                                ui.add_space(8.0);
+                                egui::Frame::NONE
+                                    .fill(t.accent_soft)
+                                    .corner_radius(CornerRadius::same(6))
+                                    .inner_margin(egui::Margin::symmetric(8, 4))
+                                    .show(ui, |ui| {
+                                        ui.label(
+                                            egui::RichText::new("Configured by Sarthak")
+                                                .font(theme::semibold(11.5))
+                                                .color(t.accent_text),
+                                        );
+                                    });
+                            });
+
+                            ui.add_space(10.0);
+
+                            // 2. Only Quotes
+                            let (quote_text, quote_author) = crate::tech_jokes::current_quote();
+                            egui::Frame::NONE
+                                .fill(t.pasteboard)
+                                .stroke(Stroke::new(1.0, t.border))
+                                .corner_radius(CornerRadius::same(10))
+                                .inner_margin(egui::Margin::symmetric(14, 10))
+                                .show(ui, |ui| {
+                                    ui.horizontal(|ui| {
+                                        ui.label(egui::RichText::new("“").font(theme::semibold(20.0)).color(t.accent));
+                                        ui.add_space(2.0);
+                                        ui.label(
+                                            egui::RichText::new(quote_text)
+                                                .font(theme::medium(13.0))
+                                                .color(t.text)
+                                                .italics(),
+                                        );
+                                        ui.add_space(4.0);
+                                        ui.label(
+                                            egui::RichText::new(format!("— {quote_author}"))
+                                                .font(theme::regular(12.0))
+                                                .color(t.text_muted),
+                                        );
+                                        ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+                                            if ui.small_button("Next Quote").on_hover_text("Show another inspiring quote").clicked() {
+                                                crate::tech_jokes::next_quote();
+                                            }
+                                        });
+                                    });
                                 });
+
+                            ui.add_space(16.0);
+
+                            // 3. Existing buttons
+                            ui.horizontal_wrapped(|ui| {
+                                ui.spacing_mut().item_spacing = vec2(10.0, 8.0);
+                                if widgets::pill_button(ui, "Open PDF Document", true).clicked() {
+                                    app.open_dialog();
+                                }
+                                if widgets::pill_button(ui, "Combine Files", false).clicked() {
+                                    app.open_combine_tab();
+                                }
+                                if widgets::pill_button(ui, "Batch Studio", false).clicked() {
+                                    app.open_batch_studio();
+                                }
+                                if widgets::pill_button(ui, "All Tools Suite", false).clicked() {
+                                    app.switch_mode(Mode::AllTools, true);
+                                }
+                                if widgets::icon_pill(ui, "github", "GitHub Repository", false).clicked() {
+                                    app.open_url("https://github.com/SarthAyush/PDFix-App");
+                                }
                             });
                         });
-                    ui.add_space(10.0);
-                    ui.horizontal(|ui| {
-                        ui.spacing_mut().item_spacing = vec2(6.0, 2.0);
-                        ui.label(egui::RichText::new("Pure Rust Engine").font(theme::medium(12.0)).color(t.text_muted));
-                        ui.label(egui::RichText::new("·").color(t.text_faint));
-                        ui.label(egui::RichText::new("100% Offline & Private").font(theme::medium(12.0)).color(t.text_muted));
-                        ui.label(egui::RichText::new("·").color(t.text_faint));
-                        ui.label(egui::RichText::new("Zero Telemetry").font(theme::medium(12.0)).color(t.text_muted));
-                        ui.label(egui::RichText::new("·").color(t.text_faint));
-                        ui.label(egui::RichText::new("GPU Accelerated").font(theme::medium(12.0)).color(t.text_muted));
-                    });
-                    ui.add_space(14.0);
-                    ui.horizontal_wrapped(|ui| {
-                        ui.spacing_mut().item_spacing = vec2(10.0, 8.0);
-                        if widgets::pill_button(ui, "Open PDF Document", true).clicked() {
-                            app.open_dialog();
+
+                        // Right column: Animative Image with transparent background moving continuously
+                        let (anim_rect, _) = ui.allocate_exact_size(vec2(140.0, 130.0), Sense::hover());
+                        let time = ui.input(|i| i.time);
+                        let dx = (time * 1.5).sin() as f32 * 12.0;
+                        let dy = (time * 2.0).cos() as f32 * 9.0;
+                        let pulse = (time * 2.4).sin() as f32 * 0.04;
+                        let float_center = anim_rect.center() + vec2(dx, dy);
+
+                        // Pulsing ambient glow aura
+                        let aura_radius = 46.0 + (time * 2.8).sin() as f32 * 5.0;
+                        let aura_color = t.accent.gamma_multiply(0.14 + 0.06 * (time * 2.0).sin() as f32);
+                        ui.painter().circle_filled(float_center, aura_radius, aura_color);
+
+                        // Floating subtle sparkling particles around the moving image
+                        for p in 0..5 {
+                            let p_time = time * 0.75 + p as f64 * 1.25;
+                            let px = float_center.x + (p_time.sin() as f32) * (34.0 + (p as f32) * 7.0);
+                            let py = float_center.y + (p_time * 1.4).cos() as f32 * 28.0;
+                            let alpha = ((p_time * 2.2).sin().abs() as f32 * 0.65).clamp(0.15, 0.75);
+                            ui.painter().circle_filled(egui::pos2(px, py), 2.2, t.accent.gamma_multiply(alpha));
                         }
-                        if widgets::pill_button(ui, "Combine Files", false).clicked() {
-                            app.open_combine_tab();
-                        }
-                        if widgets::pill_button(ui, "Batch Studio", false).clicked() {
-                            app.open_batch_studio();
-                        }
-                        if widgets::pill_button(ui, "All Tools Suite", false).clicked() {
-                            app.switch_mode(Mode::AllTools, true);
-                        }
-                        if widgets::icon_pill(ui, "github", "GitHub Repository", false).clicked() {
-                            app.open_url("https://github.com/SarthAyush/PDFix-App");
-                        }
+
+                        // Transparent moving 3D image
+                        let img_size = (86.0 * (1.0 + pulse)).max(10.0);
+                        let img_rect = Rect::from_center_size(float_center, vec2(img_size, img_size));
+                        let image = egui::Image::from_bytes(
+                            "bytes://pdfcraft-hero-anim-transparent.png",
+                            include_bytes!("../../../assets/app-icon/craftpdf-transparent.png"),
+                        )
+                        .fit_to_exact_size(vec2(img_size, img_size));
+                        image.paint_at(ui, img_rect);
                     });
                 });
             ui.add_space(18.0);

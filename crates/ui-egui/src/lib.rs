@@ -2648,10 +2648,16 @@ impl PdfCraftApp {
                 }
             }
             self.tool_keys(i, ctx);
-            if self.quick_tool == QuickTool::EditText
-                && let Some(doc) = self.session.get(self.views[i].id).filter(|d| d.allows_modification())
-            {
-                object_ui::nudge_keys(ctx, &mut self.views[i], doc);
+            if self.quick_tool == QuickTool::EditText {
+                if let Some(doc) = self.session.get(self.views[i].id).filter(|d| d.allows_modification()) {
+                    object_ui::nudge_keys(ctx, &mut self.views[i], doc);
+                }
+                if ctx.input_mut(|inp| inp.consume_key(egui::Modifiers::NONE, egui::Key::Escape)) {
+                    self.quick_tool = QuickTool::Select;
+                    self.views[i].line_editor = None;
+                    self.views[i].objects.clear();
+                    self.notify_tr("Exited text & image editing");
+                }
             }
             canvas::shortcuts(&mut self.views[i], ctx);
             self.copy_key(i, ctx);

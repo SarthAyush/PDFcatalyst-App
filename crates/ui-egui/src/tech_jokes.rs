@@ -61,3 +61,33 @@ pub fn dynamic_greeting() -> &'static str {
         _ => "Late-night session active. Rust memory safety guarantees remain unwavering.",
     }
 }
+
+/// A curated list of inspiring quotes on design, engineering, and craftsmanship.
+pub const INSPIRING_QUOTES: &[(&str, &str)] = &[
+    ("Simplicity is prerequisite for reliability.", "Edsger W. Dijkstra"),
+    ("Perfection is achieved not when there is nothing more to add, but when there is nothing left to take away.", "Antoine de Saint-Exupéry"),
+    ("Make it simple, but significant.", "Don Draper"),
+    ("The details are not the details. They make the design.", "Charles Eames"),
+    ("Craftsmanship is not an accident; it is the deliberate pursuit of mastery.", "Anonymous"),
+    ("Simplicity is the soul of efficiency.", "Austin Freeman"),
+    ("First, solve the problem. Then, write the code.", "John Johnson"),
+    ("Quality is not an act, it is a habit.", "Aristotle"),
+    ("Good code is its own best documentation.", "Steve McConnell"),
+    ("Design is not just what it looks like and feels like. Design is how it works.", "Steve Jobs"),
+    ("Programs must be written for people to read, and only incidentally for machines to execute.", "Harold Abelson"),
+    ("Focus is a practice of saying no to a hundred other good ideas.", "Steve Jobs"),
+];
+
+static QUOTE_INDEX: AtomicUsize = AtomicUsize::new(0);
+
+/// Returns the current inspiring quote and its author.
+pub fn current_quote() -> (&'static str, &'static str) {
+    let idx = QUOTE_INDEX.load(Ordering::Relaxed) % INSPIRING_QUOTES.len();
+    INSPIRING_QUOTES[idx]
+}
+
+/// Advances to the next quote and returns it.
+pub fn next_quote() -> (&'static str, &'static str) {
+    let idx = QUOTE_INDEX.fetch_add(1, Ordering::Relaxed) + 1;
+    INSPIRING_QUOTES[idx % INSPIRING_QUOTES.len()]
+}

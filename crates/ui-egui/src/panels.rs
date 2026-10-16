@@ -35,18 +35,18 @@ fn panel_header(ui: &mut egui::Ui, t: &Tokens, title: &str, back: bool) -> (bool
         if back && icons::button(ui, "chevron-left", 26.0, false, tl!("Back to all tools")).clicked() {
             go_back = true;
         }
-        // Reserve space for Close before laying out the translated title. Long tool names
-        // must never expand the fixed-width sidebar or push the Close control off-screen.
         let title_width = (ui.available_width() - 26.0 - ui.spacing().item_spacing.x).max(1.0);
-        ui.add_sized([title_width, 26.0], egui::Label::new(egui::RichText::new(tl!(title)).font(theme::semibold(15.5)).color(t.text)).truncate())
+        ui.add_sized([title_width, 26.0], egui::Label::new(egui::RichText::new(tl!(title)).font(theme::semibold(16.0)).color(t.text)).truncate())
             .on_hover_text(tl!(title));
         if icons::button(ui, "x", 26.0, false, tl!("Close panel")).clicked() {
             close = true;
         }
     });
-    ui.add_space(2.0);
-    ui.separator();
     ui.add_space(4.0);
+    let stroke = Stroke::new(1.0, t.divider.gamma_multiply(0.7));
+    let y = ui.cursor().top();
+    ui.painter().hline(ui.available_rect_before_wrap().x_range(), y, stroke);
+    ui.add_space(8.0);
     (go_back, close)
 }
 
@@ -55,25 +55,71 @@ fn all_tools(app: &mut PdfCraftApp, ui: &mut egui::Ui, t: &Tokens) {
     if close {
         app.left_open = false;
     }
+    let mut query: String = ui.data_mut(|d| d.get_temp(egui::Id::new("tools-search-filter")).unwrap_or_default());
+    egui::Frame::NONE
+        .fill(t.pasteboard)
+        .stroke(Stroke::new(1.0, t.border))
+        .corner_radius(CornerRadius::same(8))
+        .inner_margin(egui::Margin::symmetric(10, 6))
+        .show(ui, |ui| {
+            ui.horizontal(|ui| {
+                icons::paint(ui, Rect::from_center_size(ui.cursor().left_center() + vec2(7.0, 0.0), vec2(14.0, 14.0)), "search", 13.0, t.text_faint);
+                ui.add_space(16.0);
+                ui.add(
+                    egui::TextEdit::singleline(&mut query)
+                        .hint_text(tl!("Search tools…"))
+                        .font(theme::regular(12.5))
+                        .frame(egui::Frame::NONE)
+                        .desired_width((ui.available_width() - 24.0).max(10.0)),
+                );
+                if !query.is_empty() && ui.add(egui::Button::new(egui::RichText::new("✕").font(theme::medium(11.0))).frame(false)).clicked() {
+                    query.clear();
+                }
+            });
+        });
+    ui.data_mut(|d| d.insert_temp(egui::Id::new("tools-search-filter"), query.clone()));
+    ui.add_space(8.0);
+
     egui::ScrollArea::vertical().auto_shrink([false, false]).show(ui, |ui| {
-        let shown = if app.all_tools_expanded { TOOL_GROUPS.len() } else { COLLAPSED_TOOLS.min(TOOL_GROUPS.len()) };
-        for g in &TOOL_GROUPS[..shown] {
-            if tool_row(ui, t, g).clicked() {
-                app.select_tool(g.id);
+        ui.spacing_mut().item_spacing.y = 3.0;
+        let q = query.trim().to_lowercase();
+        if !q.is_empty() {
+            let mut count = 0;
+            for g in TOOL_GROUPS {
+                if tl!(g.label).to_lowercase().contains(&q) || g.id.contains(&q) {
+                    count += 1;
+                    if tool_row(ui, t, g, app.left == LeftPanel::Tool(g.id)).clicked() {
+                        app.select_tool(g.id);
+                    }
+                }
             }
-        }
-        ui.add_space(4.0);
-        let more = if app.all_tools_expanded { "View less" } else { "View more" };
-        if ui
-            .add(
-                egui::Label::new(egui::RichText::new(tl!(more)).color(t.accent_text).font(theme::medium(13.0)))
-                    .selectable(false)
-                    .sense(Sense::click()),
-            )
-            .on_hover_cursor(egui::CursorIcon::PointingHand)
-            .clicked()
-        {
-            app.all_tools_expanded = !app.all_tools_expanded;
+            if count == 0 {
+                ui.add_space(16.0);
+                ui.centered_and_justified(|ui| {
+                    ui.label(egui::RichText::new(tl!("No matching tools")).font(theme::regular(13.0)).color(t.text_muted));
+                });
+            }
+        } else {
+            let shown = if app.all_tools_expanded { TOOL_GROUPS.len() } else { COLLAPSED_TOOLS.min(TOOL_GROUPS.len()) };
+            for g in &TOOL_GROUPS[..shown] {
+                let is_active = app.left == LeftPanel::Tool(g.id);
+                if tool_row(ui, t, g, is_active).clicked() {
+                    app.select_tool(g.id);
+                }
+            }
+            ui.add_space(6.0);
+            let more = if app.all_tools_expanded { "View less" } else { "View more" };
+            if ui
+                .add(
+                    egui::Label::new(egui::RichText::new(tl!(more)).color(t.accent_text).font(theme::medium(13.0)))
+                        .selectable(false)
+                        .sense(Sense::click()),
+                )
+                .on_hover_cursor(egui::CursorIcon::PointingHand)
+                .clicked()
+            {
+                app.all_tools_expanded = !app.all_tools_expanded;
+            }
         }
     });
 }
@@ -89,33 +135,56 @@ fn row_label(ui: &mut egui::Ui, text: &str, font: egui::FontId, color: Color32, 
     elided
 }
 
-fn tool_row(ui: &mut egui::Ui, t: &Tokens, g: &ToolGroup) -> egui::Response {
-    let (rect, resp) = ui.allocate_exact_size(vec2(ui.available_width(), 34.0), Sense::click());
+fn tool_row(ui: &mut egui::Ui, t: &Tokens, g: &ToolGroup, is_active: bool) -> egui::Response {
+    let (rect, resp) = ui.allocate_exact_size(vec2(ui.available_width(), 38.0), Sense::click());
     resp.widget_info(|| egui::WidgetInfo::labeled(egui::WidgetType::Button, true, tl!(g.label)));
     let press = theme::Press::track(ui, &resp);
-    press.wash(ui, rect, 6, false);
     let body = rect.translate(press.offset());
-    icons::paint(ui, Rect::from_min_size(body.min + vec2(6.0, 7.0), vec2(20.0, 20.0)), g.icon, 19.0, hue(g));
+
+    let (fill, stroke) = if is_active {
+        (t.accent_soft, Stroke::new(1.0, t.accent.gamma_multiply(0.4)))
+    } else if resp.hovered() {
+        (t.hover, Stroke::new(1.0, t.border))
+    } else {
+        (Color32::TRANSPARENT, Stroke::NONE)
+    };
+    ui.painter().rect(body, CornerRadius::same(8), fill, stroke, egui::StrokeKind::Inside);
+
+    // Modern 26x26 rounded icon badge
+    let icon_box = Rect::from_center_size(body.left_center() + vec2(20.0, 0.0), vec2(26.0, 26.0));
+    let icon_tint = hue(g);
+    let icon_bg = if is_active {
+        t.accent.gamma_multiply(0.22)
+    } else if resp.hovered() {
+        icon_tint.gamma_multiply(0.18)
+    } else {
+        icon_tint.gamma_multiply(0.10)
+    };
+    ui.painter().rect_filled(icon_box, CornerRadius::same(6), icon_bg);
+    ui.painter().rect_stroke(icon_box, CornerRadius::same(6), Stroke::new(1.0, icon_tint.gamma_multiply(0.3)), egui::StrokeKind::Inside);
+    icons::paint(ui, Rect::from_center_size(icon_box.center(), vec2(16.0, 16.0)), g.icon, 16.0, if is_active { t.accent } else { icon_tint });
+
     let right_reserved = match (g.badge, g.availability) {
         (Some(b), _) => ui.fonts_mut(|f| f.layout_no_wrap(tl!(b).to_owned(), theme::semibold(9.5), Color32::WHITE).size().x) + 26.0,
         (None, Availability::Planned(m)) if resp.hovered() => {
             let hint = format!("{} · {m}", tl!("Planned"));
             ui.fonts_mut(|f| f.layout_no_wrap(hint, theme::medium(10.5), t.text_faint).size().x) + 18.0
         }
-        _ => 8.0,
+        _ => 22.0,
     };
+    let text_color = if is_active { t.accent_text } else { t.text };
+    let font = if is_active { theme::semibold(13.5) } else { theme::medium(13.5) };
     let clipped =
-        row_label(ui, tl!(g.label), theme::regular(13.5), t.text, body.left_center() + vec2(36.0, 0.0), rect.width() - 36.0 - right_reserved);
+        row_label(ui, tl!(g.label), font, text_color, body.left_center() + vec2(42.0, 0.0), rect.width() - 42.0 - right_reserved);
     match (g.badge, g.availability) {
         (Some(b), _) => {
             let font = theme::semibold(9.5);
             let badge = tl!(b);
             let w = ui.fonts_mut(|f| f.layout_no_wrap(badge.to_string(), font.clone(), Color32::WHITE).size().x);
             let r = Rect::from_center_size(body.right_center() - vec2(w / 2.0 + 10.0, 0.0), vec2(w + 10.0, 16.0));
-            ui.painter().rect_filled(r, CornerRadius::same(4), t.badge_new);
+            ui.painter().rect_filled(r, CornerRadius::same(8), t.badge_new);
             ui.painter().text(r.center(), Align2::CENTER_CENTER, badge, font, Color32::WHITE);
         }
-        // Planned tools: a quiet milestone hint instead of a chip, so the list stays calm.
         (None, Availability::Planned(m)) if resp.hovered() => {
             ui.painter().text(
                 body.right_center() - vec2(10.0, 0.0),
@@ -125,7 +194,10 @@ fn tool_row(ui: &mut egui::Ui, t: &Tokens, g: &ToolGroup) -> egui::Response {
                 t.text_faint,
             );
         }
-        _ => {}
+        _ => {
+            let arrow_color = if is_active { t.accent } else if resp.hovered() { t.text_muted } else { t.text_faint.gamma_multiply(0.6) };
+            icons::paint(ui, Rect::from_center_size(body.right_center() - vec2(12.0, 0.0), vec2(12.0, 12.0)), "chevron-right", 12.0, arrow_color);
+        }
     }
     let tip = match g.availability {
         Availability::Ready => tl!("Available").to_string(),
@@ -181,14 +253,36 @@ fn tool_detail(app: &mut PdfCraftApp, ui: &mut egui::Ui, t: &Tokens, g: &'static
     // Edit a PDF shows Format text at the top while text is selected or being added.
     if g.id == "edit" {
         if app.quick_tool == crate::QuickTool::EditText {
-            let count = app.active_ids().map_or(0, |(i, _)| app.views[i].objects.count());
-            if count > 0 {
-                ui.label(crate::i18n::trn(crate::i18n::current(), count as u64, "{n} object selected", "{n} objects selected"));
-                ui.label(tl!("Drag the selection to move it. Esc clears the selection."));
-            } else {
-                ui.label(tl!("Shift-click to select several objects. Drag empty space to select an area."));
-            }
-            ui.add_space(6.0);
+            egui::Frame::NONE
+                .fill(t.accent_soft)
+                .stroke(Stroke::new(1.0, t.accent))
+                .corner_radius(CornerRadius::same(10))
+                .inner_margin(egui::Margin::symmetric(12, 10))
+                .show(ui, |ui| {
+                    ui.horizontal(|ui| {
+                        icons::paint(ui, Rect::from_center_size(ui.cursor().left_center() + vec2(10.0, 0.0), vec2(18.0, 18.0)), "pen-line", 16.0, t.accent);
+                        ui.add_space(20.0);
+                        ui.vertical(|ui| {
+                            ui.label(egui::RichText::new("Editing text & images active").font(theme::semibold(12.5)).color(t.accent_text));
+                            let count = app.active_ids().map_or(0, |(i, _)| app.views[i].objects.count());
+                            if count > 0 {
+                                ui.label(egui::RichText::new(crate::i18n::trn(crate::i18n::current(), count as u64, "{n} object selected", "{n} objects selected")).font(theme::regular(11.0)).color(t.text));
+                            } else {
+                                ui.label(egui::RichText::new("Click any text block to edit").font(theme::regular(11.0)).color(t.text_muted));
+                            }
+                        });
+                    });
+                    ui.add_space(8.0);
+                    if widgets::pill_button(ui, "✕ Disable Edit Process", true).on_hover_text("Exit edit mode and return to select mode").clicked() {
+                        app.quick_tool = crate::QuickTool::Select;
+                        if let Some((i, _)) = app.active_ids() {
+                            app.views[i].line_editor = None;
+                            app.views[i].objects.clear();
+                        }
+                        app.notify_tr("Exited text & image editing");
+                    }
+                });
+            ui.add_space(8.0);
         }
         format_section(app, ui, t);
     }
@@ -198,37 +292,62 @@ fn tool_detail(app: &mut PdfCraftApp, ui: &mut egui::Ui, t: &Tokens, g: &'static
     let marks = if footer { app.active_ids().and_then(|(_, id)| app.session.get(id)).map_or(0, |d| d.redaction_marks()) } else { 0 };
     let list_h = if footer { (ui.available_height() - 52.0).max(80.0) } else { ui.available_height() };
     egui::ScrollArea::vertical().auto_shrink([false, false]).max_height(list_h).show(ui, |ui| {
+        ui.spacing_mut().item_spacing.y = 2.0;
         for s in g.sections {
             widgets::section_title(ui, tl!(s.title));
             for item in s.items {
                 if g.id == "fill_sign" && (item.command.starts_with("sign.fill.signature") || item.command.starts_with("sign.fill.initials")) {
                     continue;
                 }
-                let (rect, resp) = ui.allocate_exact_size(vec2(ui.available_width(), 34.0), Sense::click());
+                let is_active_tool = g.id == "edit" && item.command == "edit.edit_text" && app.quick_tool == crate::QuickTool::EditText;
+                let (rect, resp) = ui.allocate_exact_size(vec2(ui.available_width(), 36.0), Sense::click());
                 resp.widget_info(|| egui::WidgetInfo::labeled(egui::WidgetType::Button, true, tl!(item.label)));
                 let ready = item.availability == Availability::Ready;
                 let press = theme::Press::track(ui, &resp);
-                press.wash(ui, rect, 6, false);
                 let body = rect.translate(press.offset());
-                let fg = if ready { t.text } else { t.text_muted };
+
+                let (row_fill, row_stroke) = if is_active_tool {
+                    (t.accent_soft, Stroke::new(1.0, t.accent))
+                } else if resp.hovered() {
+                    (t.hover, Stroke::new(1.0, t.border))
+                } else {
+                    (Color32::TRANSPARENT, Stroke::NONE)
+                };
+                ui.painter().rect(body, CornerRadius::same(7), row_fill, row_stroke, egui::StrokeKind::Inside);
+
+                let fg = if is_active_tool { t.accent_text } else if ready { t.text } else { t.text_muted };
+                let icon_box = Rect::from_center_size(body.left_center() + vec2(18.0, 0.0), vec2(24.0, 24.0));
+                let icon_color = if is_active_tool { t.accent } else if ready { hue(g) } else { t.text_faint };
                 icons::paint(
                     ui,
-                    Rect::from_min_size(body.min + vec2(6.0, 8.0), vec2(18.0, 18.0)),
+                    Rect::from_center_size(icon_box.center(), vec2(16.0, 16.0)),
                     item.icon,
-                    17.0,
-                    if ready { hue(g) } else { t.text_faint },
+                    16.0,
+                    icon_color,
                 );
-                let (chip, fill, cfg) = match item.availability {
-                    Availability::Ready => (tl!("Ready"), Color32::from_rgb(0xDD, 0xF3, 0xE4), Color32::from_rgb(0x1E, 0x7B, 0x43)),
-                    Availability::Planned(m) => (m, t.pressed, t.text_muted),
-                    Availability::Provider => ("AI", t.pressed, t.text_muted),
+
+                let (chip, fill, cfg) = if is_active_tool {
+                    (tl!("Active"), t.accent, Color32::WHITE)
+                } else {
+                    match item.availability {
+                        Availability::Ready => {
+                            if t.dark() {
+                                (tl!("Ready"), Color32::from_rgb(0x18, 0x36, 0x27), Color32::from_rgb(0x4A, 0xDE, 0x80))
+                            } else {
+                                (tl!("Ready"), Color32::from_rgb(0xDC, 0xF5, 0xE8), Color32::from_rgb(0x16, 0x65, 0x34))
+                            }
+                        }
+                        Availability::Planned(m) => (m, t.pressed, t.text_muted),
+                        Availability::Provider => ("AI", t.pressed, t.text_muted),
+                    }
                 };
                 let font = theme::semibold(9.5);
                 let chip_label = tl!(chip).to_string();
                 let w = crate::widgets::text_width(ui, &chip_label, &font);
-                let r = Rect::from_center_size(body.right_center() - vec2(w / 2.0 + 10.0, 0.0), vec2(w + 10.0, 16.0));
-                row_label(ui, tl!(item.label), theme::regular(13.0), fg, body.left_center() + vec2(34.0, 0.0), r.left() - body.left() - 42.0);
-                ui.painter().rect_filled(r, CornerRadius::same(4), fill);
+                let r = Rect::from_center_size(body.right_center() - vec2(w / 2.0 + 10.0, 0.0), vec2(w + 12.0, 18.0));
+                let label_font = if is_active_tool { theme::semibold(13.0) } else { theme::regular(13.0) };
+                row_label(ui, tl!(item.label), label_font, fg, body.left_center() + vec2(36.0, 0.0), r.left() - body.left() - 44.0);
+                ui.painter().rect_filled(r, CornerRadius::same(10), fill);
                 ui.painter().text(r.center(), Align2::CENTER_CENTER, chip_label, font, cfg);
                 if theme::hand(resp).on_hover_text(format!("{} — {}", tl!(item.label), item.command)).clicked() {
                     run = Some(item.command);

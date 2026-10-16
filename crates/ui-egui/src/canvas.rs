@@ -3426,6 +3426,7 @@ pub fn document_area(app: &mut PdfCraftApp, index: usize, ui: &mut egui::Ui) {
         run_button(app, index, &name, action);
     }
     quick_bar(app, avail, ui);
+    edit_text_floating_bar(app, index, avail, ui);
     if let Some((source, file, destination)) = remote_open {
         app.open_remote_link(source, file, destination);
     }
@@ -3885,6 +3886,68 @@ fn notice_bar(ui: &mut egui::Ui, t: &Tokens, icon: &str, icon_color: Color32, te
             });
         });
     });
+}
+
+/// The floating pill button when editing text and images so the user can easily disable/exit the process.
+fn edit_text_floating_bar(app: &mut PdfCraftApp, index: usize, area: Rect, ui: &mut egui::Ui) {
+    if app.quick_tool != QuickTool::EditText {
+        return;
+    }
+    let t = Tokens::get(ui.ctx());
+    let anchor_pos = area.center_top() + vec2(0.0, 16.0);
+    egui::Area::new(egui::Id::new("floating-edit-text-cancel-pill"))
+        .order(egui::Order::Foreground)
+        .pivot(Align2::CENTER_TOP)
+        .fixed_pos(anchor_pos)
+        .show(ui.ctx(), |ui| {
+            egui::Frame::NONE
+                .fill(t.card)
+                .stroke(Stroke::new(1.5, t.accent))
+                .corner_radius(CornerRadius::same(20))
+                .shadow(egui::Shadow {
+                    offset: [0, 6],
+                    blur: 20,
+                    spread: 0,
+                    color: Color32::from_black_alpha(if t.dark() { 120 } else { 35 }),
+                })
+                .inner_margin(egui::Margin { left: 16, right: 10, top: 7, bottom: 7 })
+                .show(ui, |ui| {
+                    ui.horizontal(|ui| {
+                        icons::paint(
+                            ui,
+                            Rect::from_center_size(ui.cursor().left_center() + vec2(10.0, 0.0), vec2(18.0, 18.0)),
+                            "pen-line",
+                            16.0,
+                            t.accent,
+                        );
+                        ui.add_space(20.0);
+                        ui.label(
+                            egui::RichText::new("Editing text & images")
+                                .font(theme::semibold(13.0))
+                                .color(t.text),
+                        );
+                        ui.label(
+                            egui::RichText::new("(Esc)")
+                                .font(theme::regular(11.0))
+                                .color(t.text_faint),
+                        );
+                        ui.add_space(10.0);
+                        let exit_btn = egui::Button::new(
+                            egui::RichText::new("✕ Exit / Disable")
+                                .font(theme::semibold(12.0))
+                                .color(Color32::WHITE),
+                        )
+                        .fill(t.accent)
+                        .corner_radius(CornerRadius::same(12));
+                        if ui.add(exit_btn).on_hover_text("Disable editing process and return to select mode").clicked() {
+                            app.quick_tool = QuickTool::Select;
+                            app.views[index].line_editor = None;
+                            app.views[index].objects.clear();
+                            app.notify_tr("Exited text & image editing");
+                        }
+                    });
+                });
+        });
 }
 
 /// The floating quick-action bar at the left edge of the document area.
