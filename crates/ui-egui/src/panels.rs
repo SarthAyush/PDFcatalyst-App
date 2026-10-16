@@ -67,7 +67,7 @@ fn all_tools(app: &mut PdfCraftApp, ui: &mut egui::Ui, t: &Tokens) {
                 ui.add_space(16.0);
                 ui.add(
                     egui::TextEdit::singleline(&mut query)
-                        .hint_text(tl!("Search tools…"))
+                        .hint_text(tl!("Search tools and commands…"))
                         .font(theme::regular(12.5))
                         .frame(egui::Frame::NONE)
                         .desired_width((ui.available_width() - 24.0).max(10.0)),
@@ -142,7 +142,7 @@ fn tool_row(ui: &mut egui::Ui, t: &Tokens, g: &ToolGroup, is_active: bool) -> eg
     let body = rect.translate(press.offset());
 
     let (fill, stroke) = if is_active {
-        (t.accent_soft, Stroke::new(1.0, t.accent.gamma_multiply(0.4)))
+        (t.selected, Stroke::new(1.0, t.border_strong))
     } else if resp.hovered() {
         (t.hover, Stroke::new(1.0, t.border))
     } else {
@@ -150,19 +150,18 @@ fn tool_row(ui: &mut egui::Ui, t: &Tokens, g: &ToolGroup, is_active: bool) -> eg
     };
     ui.painter().rect(body, CornerRadius::same(8), fill, stroke, egui::StrokeKind::Inside);
 
-    // Modern 26x26 rounded icon badge
+    // Modern 26x26 rounded icon badge - monochrome glass
     let icon_box = Rect::from_center_size(body.left_center() + vec2(20.0, 0.0), vec2(26.0, 26.0));
-    let icon_tint = hue(g);
-    let icon_bg = if is_active {
-        t.accent.gamma_multiply(0.22)
+    let (icon_bg, icon_stroke, icon_color) = if is_active {
+        (t.hover, Stroke::new(1.0, t.border_strong), t.text)
     } else if resp.hovered() {
-        icon_tint.gamma_multiply(0.18)
+        (t.hover, Stroke::new(1.0, t.border), t.text)
     } else {
-        icon_tint.gamma_multiply(0.10)
+        (t.glass_fill, Stroke::new(1.0, t.border), t.icon)
     };
     ui.painter().rect_filled(icon_box, CornerRadius::same(6), icon_bg);
-    ui.painter().rect_stroke(icon_box, CornerRadius::same(6), Stroke::new(1.0, icon_tint.gamma_multiply(0.3)), egui::StrokeKind::Inside);
-    icons::paint(ui, Rect::from_center_size(icon_box.center(), vec2(16.0, 16.0)), g.icon, 16.0, if is_active { t.accent } else { icon_tint });
+    ui.painter().rect_stroke(icon_box, CornerRadius::same(6), icon_stroke, egui::StrokeKind::Inside);
+    icons::paint(ui, Rect::from_center_size(icon_box.center(), vec2(16.0, 16.0)), g.icon, 16.0, icon_color);
 
     let right_reserved = match (g.badge, g.availability) {
         (Some(b), _) => ui.fonts_mut(|f| f.layout_no_wrap(tl!(b).to_owned(), theme::semibold(9.5), Color32::WHITE).size().x) + 26.0,
@@ -172,18 +171,18 @@ fn tool_row(ui: &mut egui::Ui, t: &Tokens, g: &ToolGroup, is_active: bool) -> eg
         }
         _ => 22.0,
     };
-    let text_color = if is_active { t.accent_text } else { t.text };
+    let text_color = t.text;
     let font = if is_active { theme::semibold(13.5) } else { theme::medium(13.5) };
-    let clipped =
-        row_label(ui, tl!(g.label), font, text_color, body.left_center() + vec2(42.0, 0.0), rect.width() - 42.0 - right_reserved);
+    let clipped = row_label(ui, tl!(g.label), font, text_color, body.left_center() + vec2(42.0, 0.0), rect.width() - 42.0 - right_reserved);
     match (g.badge, g.availability) {
         (Some(b), _) => {
             let font = theme::semibold(9.5);
             let badge = tl!(b);
-            let w = ui.fonts_mut(|f| f.layout_no_wrap(badge.to_string(), font.clone(), Color32::WHITE).size().x);
+            let text_col = if t.dark() { Color32::from_rgb(0x11, 0x11, 0x14) } else { Color32::WHITE };
+            let w = ui.fonts_mut(|f| f.layout_no_wrap(badge.to_string(), font.clone(), text_col).size().x);
             let r = Rect::from_center_size(body.right_center() - vec2(w / 2.0 + 10.0, 0.0), vec2(w + 10.0, 16.0));
             ui.painter().rect_filled(r, CornerRadius::same(8), t.badge_new);
-            ui.painter().text(r.center(), Align2::CENTER_CENTER, badge, font, Color32::WHITE);
+            ui.painter().text(r.center(), Align2::CENTER_CENTER, badge, font, text_col);
         }
         (None, Availability::Planned(m)) if resp.hovered() => {
             ui.painter().text(
@@ -195,7 +194,13 @@ fn tool_row(ui: &mut egui::Ui, t: &Tokens, g: &ToolGroup, is_active: bool) -> eg
             );
         }
         _ => {
-            let arrow_color = if is_active { t.accent } else if resp.hovered() { t.text_muted } else { t.text_faint.gamma_multiply(0.6) };
+            let arrow_color = if is_active {
+                t.accent
+            } else if resp.hovered() {
+                t.text_muted
+            } else {
+                t.text_faint.gamma_multiply(0.6)
+            };
             icons::paint(ui, Rect::from_center_size(body.right_center() - vec2(12.0, 0.0), vec2(12.0, 12.0)), "chevron-right", 12.0, arrow_color);
         }
     }
@@ -260,20 +265,36 @@ fn tool_detail(app: &mut PdfCraftApp, ui: &mut egui::Ui, t: &Tokens, g: &'static
                 .inner_margin(egui::Margin::symmetric(12, 10))
                 .show(ui, |ui| {
                     ui.horizontal(|ui| {
-                        icons::paint(ui, Rect::from_center_size(ui.cursor().left_center() + vec2(10.0, 0.0), vec2(18.0, 18.0)), "pen-line", 16.0, t.accent);
+                        icons::paint(
+                            ui,
+                            Rect::from_center_size(ui.cursor().left_center() + vec2(10.0, 0.0), vec2(18.0, 18.0)),
+                            "pen-line",
+                            16.0,
+                            t.accent,
+                        );
                         ui.add_space(20.0);
                         ui.vertical(|ui| {
                             ui.label(egui::RichText::new("Editing text & images active").font(theme::semibold(12.5)).color(t.accent_text));
                             let count = app.active_ids().map_or(0, |(i, _)| app.views[i].objects.count());
                             if count > 0 {
-                                ui.label(egui::RichText::new(crate::i18n::trn(crate::i18n::current(), count as u64, "{n} object selected", "{n} objects selected")).font(theme::regular(11.0)).color(t.text));
+                                ui.label(
+                                    egui::RichText::new(crate::i18n::trn(
+                                        crate::i18n::current(),
+                                        count as u64,
+                                        "{n} object selected",
+                                        "{n} objects selected",
+                                    ))
+                                    .font(theme::regular(11.0))
+                                    .color(t.text),
+                                );
                             } else {
                                 ui.label(egui::RichText::new("Click any text block to edit").font(theme::regular(11.0)).color(t.text_muted));
                             }
                         });
                     });
                     ui.add_space(8.0);
-                    if widgets::pill_button(ui, "✕ Disable Edit Process", true).on_hover_text("Exit edit mode and return to select mode").clicked() {
+                    if widgets::pill_button(ui, "✕ Disable Edit Process", true).on_hover_text("Exit edit mode and return to select mode").clicked()
+                    {
                         app.quick_tool = crate::QuickTool::Select;
                         if let Some((i, _)) = app.active_ids() {
                             app.views[i].line_editor = None;
@@ -315,16 +336,22 @@ fn tool_detail(app: &mut PdfCraftApp, ui: &mut egui::Ui, t: &Tokens, g: &'static
                 };
                 ui.painter().rect(body, CornerRadius::same(7), row_fill, row_stroke, egui::StrokeKind::Inside);
 
-                let fg = if is_active_tool { t.accent_text } else if ready { t.text } else { t.text_muted };
+                let fg = if is_active_tool {
+                    t.accent_text
+                } else if ready {
+                    t.text
+                } else {
+                    t.text_muted
+                };
                 let icon_box = Rect::from_center_size(body.left_center() + vec2(18.0, 0.0), vec2(24.0, 24.0));
-                let icon_color = if is_active_tool { t.accent } else if ready { hue(g) } else { t.text_faint };
-                icons::paint(
-                    ui,
-                    Rect::from_center_size(icon_box.center(), vec2(16.0, 16.0)),
-                    item.icon,
-                    16.0,
-                    icon_color,
-                );
+                let icon_color = if is_active_tool {
+                    t.accent
+                } else if ready {
+                    hue(g)
+                } else {
+                    t.text_faint
+                };
+                icons::paint(ui, Rect::from_center_size(icon_box.center(), vec2(16.0, 16.0)), item.icon, 16.0, icon_color);
 
                 let (chip, fill, cfg) = if is_active_tool {
                     (tl!("Active"), t.accent, Color32::WHITE)

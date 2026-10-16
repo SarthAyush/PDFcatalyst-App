@@ -688,11 +688,9 @@ impl PdfCraftApp {
 /// Render a top-level menu's registered commands (with live labels, shortcuts and enablement).
 pub(crate) fn registry_menu(app: &mut PdfCraftApp, ui: &mut egui::Ui, menu: &str) {
     if menu == "Help" {
-        for (id, label) in [
-            ("help.shortcuts", "Keyboard shortcuts"),
-            ("help.check_updates", "Check for updates…"),
-            ("help.about", "About PDFCatalyst"),
-        ] {
+        for (id, label) in
+            [("help.shortcuts", "Keyboard shortcuts"), ("help.check_updates", "Check for updates…"), ("help.about", "About PDFCatalyst")]
+        {
             if let Some(spec) = commands::command(id) {
                 let shortcut = spec.shortcut.map(|s| shortcut_label(ui.ctx(), s)).unwrap_or_default();
                 let enabled = app.command_enabled(spec);

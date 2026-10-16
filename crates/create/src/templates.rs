@@ -1,8 +1,8 @@
 //! Parametric vector template generator: creates structured PDF documents with vector styling,
 //! custom color palettes, and professional typographic hierarchy without external files.
 
-use pdfcraft_cos::{Dict, Document, Object};
 use crate::{CreateError, add_page, set_title};
+use pdfcraft_cos::{Dict, Document, Object};
 
 /// Standard paper sizes in points.
 const A4: (f64, f64) = (595.28, 841.89);
@@ -51,10 +51,7 @@ fn draw_line(c: &mut String, x1: f64, y1: f64, x2: f64, y2: f64, line_w: f64, rg
 
 fn draw_text(c: &mut String, font: &str, size: f64, x: f64, y: f64, rgb: (f64, f64, f64), text: &str) {
     let escaped = text.replace('\\', "\\\\").replace('(', "\\(").replace(')', "\\)");
-    c.push_str(&format!(
-        "BT /{font} {size:.1} Tf {:.3} {:.3} {:.3} rg 1 0 0 1 {x:.2} {y:.2} Tm ({escaped}) Tj ET\n",
-        rgb.0, rgb.1, rgb.2
-    ));
+    c.push_str(&format!("BT /{font} {size:.1} Tf {:.3} {:.3} {:.3} rg 1 0 0 1 {x:.2} {y:.2} Tm ({escaped}) Tj ET\n", rgb.0, rgb.1, rgb.2));
 }
 
 /// Generates a styled, parametric vector PDF template.
@@ -230,7 +227,15 @@ fn generate_resume(style: usize, color: [u8; 3]) -> Result<Document, CreateError
         let mut sy = h - 100.0;
         draw_text(&mut c, "F2", 11.5, 52.0, sy, accent, "TECHNICAL SKILLS");
         sy -= 16.0;
-        for skill in &["Rust / Tokio / async", "C / C++ (C++20)", "Systems Architecture", "Distributed Systems", "WebAssembly / egui", "Linux Kernel / eBPF", "Docker & Kubernetes"] {
+        for skill in &[
+            "Rust / Tokio / async",
+            "C / C++ (C++20)",
+            "Systems Architecture",
+            "Distributed Systems",
+            "WebAssembly / egui",
+            "Linux Kernel / eBPF",
+            "Docker & Kubernetes",
+        ] {
             draw_text(&mut c, "F1", 9.5, 52.0, sy, text_dark, &format!("• {skill}"));
             sy -= 14.0;
         }
@@ -259,9 +264,25 @@ fn generate_resume(style: usize, color: [u8; 3]) -> Result<Document, CreateError
     draw_text(&mut c, "F2", 12.5, main_x, my, accent, "PROFESSIONAL SUMMARY");
     draw_line(&mut c, main_x, my - 4.0, main_x + main_w, my - 4.0, 0.75, accent);
     my -= 16.0;
-    draw_text(&mut c, "F1", 9.5, main_x, my, text_dark, "High-velocity systems engineer with 10+ years specializing in low-latency infrastructure, memory-safe");
+    draw_text(
+        &mut c,
+        "F1",
+        9.5,
+        main_x,
+        my,
+        text_dark,
+        "High-velocity systems engineer with 10+ years specializing in low-latency infrastructure, memory-safe",
+    );
     my -= 13.0;
-    draw_text(&mut c, "F1", 9.5, main_x, my, text_dark, "Rust programming, and scalable backend platforms. Proven track record scaling workloads to 10M+ req/sec.");
+    draw_text(
+        &mut c,
+        "F1",
+        9.5,
+        main_x,
+        my,
+        text_dark,
+        "Rust programming, and scalable backend platforms. Proven track record scaling workloads to 10M+ req/sec.",
+    );
 
     my -= 24.0;
 
@@ -271,21 +292,36 @@ fn generate_resume(style: usize, color: [u8; 3]) -> Result<Document, CreateError
     my -= 18.0;
 
     let experiences = [
-        ("Principal Systems Architect", "Apex Distributed Systems", "2022 - Present", &[
-            "Architected high-throughput consensus engine in Rust reducing tail latencies by 64%.",
-            "Led engineering team of 18 distributed systems and platform reliability engineers.",
-            "Designed automated fault injection and fuzz testing suite catching 12 critical concurrency bugs.",
-        ]),
-        ("Senior Software Engineer", "HyperScale Cloud Infrastructure", "2018 - 2022", &[
-            "Re-engineered telemetry pipeline processing 4.2TB daily log streams using SIMD-accelerated parsers.",
-            "Implemented cross-platform rendering engine deployed across Linux, macOS, and Windows clients.",
-            "Mentored junior engineers and spearheaded cross-team memory safety and concurrency workshops.",
-        ]),
-        ("Software Engineer", "NextGen Networks Inc.", "2015 - 2018", &[
-            "Developed low-overhead network packet inspection filters utilizing eBPF and XDP kernel hooks.",
-            "Decreased CPU memory footprint by 40% through zero-copy buffer pools and custom allocators.",
-            "Collaborated with firmware engineers on automated continuous integration testing pipelines.",
-        ]),
+        (
+            "Principal Systems Architect",
+            "Apex Distributed Systems",
+            "2022 - Present",
+            &[
+                "Architected high-throughput consensus engine in Rust reducing tail latencies by 64%.",
+                "Led engineering team of 18 distributed systems and platform reliability engineers.",
+                "Designed automated fault injection and fuzz testing suite catching 12 critical concurrency bugs.",
+            ],
+        ),
+        (
+            "Senior Software Engineer",
+            "HyperScale Cloud Infrastructure",
+            "2018 - 2022",
+            &[
+                "Re-engineered telemetry pipeline processing 4.2TB daily log streams using SIMD-accelerated parsers.",
+                "Implemented cross-platform rendering engine deployed across Linux, macOS, and Windows clients.",
+                "Mentored junior engineers and spearheaded cross-team memory safety and concurrency workshops.",
+            ],
+        ),
+        (
+            "Software Engineer",
+            "NextGen Networks Inc.",
+            "2015 - 2018",
+            &[
+                "Developed low-overhead network packet inspection filters utilizing eBPF and XDP kernel hooks.",
+                "Decreased CPU memory footprint by 40% through zero-copy buffer pools and custom allocators.",
+                "Collaborated with firmware engineers on automated continuous integration testing pipelines.",
+            ],
+        ),
     ];
 
     for (role, company, period, bullets) in &experiences {
@@ -347,7 +383,15 @@ fn generate_proposal(style: usize, color: [u8; 3]) -> Result<Document, CreateErr
     let mut p2 = String::new();
     draw_line(&mut p2, 50.0, h - 45.0, w - 50.0, h - 45.0, 2.0, accent);
     draw_text(&mut p2, "F2", 18.0, 50.0, h - 70.0, text_dark, "1. Executive Summary & Project Scope");
-    draw_text(&mut p2, "F1", 10.5, 50.0, h - 92.0, text_dark, "This document outlines the strategic migration of legacy database and API services to a zero-copy,");
+    draw_text(
+        &mut p2,
+        "F1",
+        10.5,
+        50.0,
+        h - 92.0,
+        text_dark,
+        "This document outlines the strategic migration of legacy database and API services to a zero-copy,",
+    );
     draw_text(&mut p2, "F1", 10.5, 50.0, h - 106.0, text_dark, "high-throughput distributed microservice architecture written in Rust.");
 
     draw_text(&mut p2, "F2", 14.0, 50.0, h - 140.0, accent, "Core Technical Objectives");

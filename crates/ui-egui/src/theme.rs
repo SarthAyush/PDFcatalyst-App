@@ -50,6 +50,7 @@ pub struct Tokens {
     pub pasteboard: Color32,
     pub card: Color32,
     pub border: Color32,
+    pub border_strong: Color32,
     pub divider: Color32,
     pub text: Color32,
     pub text_muted: Color32,
@@ -63,6 +64,11 @@ pub struct Tokens {
     pub accent_soft: Color32,
     pub field: Color32,
     pub badge_new: Color32,
+    pub glass_fill: Color32,
+    pub glass_hover: Color32,
+    pub danger: Color32,
+    pub success: Color32,
+    pub warning: Color32,
     pub page_shadow: Color32,
     pub radius: u8,
 }
@@ -72,50 +78,62 @@ impl Tokens {
         match kind {
             ThemeKind::Light => Self {
                 kind,
-                titlebar: Color32::from_rgb(0xEB, 0xE9, 0xF4),
-                chrome: Color32::from_rgb(0xFF, 0xFF, 0xFF),
-                panel: Color32::from_rgb(0xFB, 0xFA, 0xFE),
-                pasteboard: Color32::from_rgb(0xF0, 0xEF, 0xF8),
+                titlebar: Color32::from_rgb(0xF0, 0xF1, 0xF4),
+                chrome: Color32::from_rgb(0xFA, 0xFA, 0xFB),
+                panel: Color32::from_rgb(0xF4, 0xF5, 0xF7),
+                pasteboard: Color32::from_rgb(0xEB, 0xEC, 0xEF),
                 card: Color32::from_rgb(0xFF, 0xFF, 0xFF),
-                border: Color32::from_rgb(0xD8, 0xD4, 0xE8),
-                divider: Color32::from_rgb(0xE6, 0xE3, 0xF3),
-                text: Color32::from_rgb(0x16, 0x14, 0x26),
-                text_muted: Color32::from_rgb(0x56, 0x50, 0x70),
-                text_faint: Color32::from_rgb(0x6A, 0x64, 0x84),
-                icon: Color32::from_rgb(0x3F, 0x39, 0x5A),
-                hover: Color32::from_rgb(0xF2, 0xEE, 0xFC),
-                pressed: Color32::from_rgb(0xE4, 0xDC, 0xF8),
-                selected: Color32::from_rgb(0xEE, 0xE7, 0xFE),
-                accent: Color32::from_rgb(0x6D, 0x28, 0xD9),
-                accent_text: Color32::from_rgb(0x5B, 0x21, 0xB6),
-                accent_soft: Color32::from_rgb(0xF3, 0xEB, 0xFF),
+                border: Color32::from_rgb(0xD8, 0xDA, 0xE0),
+                border_strong: Color32::from_rgb(0xB8, 0xBA, 0xC4),
+                divider: Color32::from_rgb(0xE2, 0xE4, 0xEA),
+                text: Color32::from_rgb(0x11, 0x11, 0x14),
+                text_muted: Color32::from_rgb(0x4E, 0x4E, 0x56),
+                text_faint: Color32::from_rgb(0x60, 0x60, 0x6A),
+                icon: Color32::from_rgb(0x27, 0x27, 0x2A),
+                hover: Color32::from_rgb(0xF0, 0xF1, 0xF5),
+                pressed: Color32::from_rgb(0xE2, 0xE4, 0xEB),
+                selected: Color32::from_rgb(0xEA, 0xEC, 0xF2),
+                accent: Color32::from_rgb(0x18, 0x18, 0x1B),
+                accent_text: Color32::from_rgb(0x11, 0x11, 0x14),
+                accent_soft: Color32::from_rgb(0xEA, 0xEB, 0xF0),
                 field: Color32::from_rgb(0xFF, 0xFF, 0xFF),
-                badge_new: Color32::from_rgb(0x6D, 0x28, 0xD9),
-                page_shadow: Color32::from_black_alpha(38),
+                badge_new: Color32::from_rgb(0x18, 0x18, 0x1B),
+                glass_fill: Color32::from_rgba_premultiplied(0x00, 0x00, 0x00, 0x06),
+                glass_hover: Color32::from_rgba_premultiplied(0x00, 0x00, 0x00, 0x0D),
+                danger: Color32::from_rgb(0xDC, 0x26, 0x26),
+                success: Color32::from_rgb(0x16, 0xA3, 0x4A),
+                warning: Color32::from_rgb(0xD9, 0x77, 0x06),
+                page_shadow: Color32::from_black_alpha(32),
                 radius: 8,
             },
             ThemeKind::Dark => Self {
                 kind,
-                titlebar: Color32::from_rgb(0x13, 0x12, 0x1B),
-                chrome: Color32::from_rgb(0x1A, 0x19, 0x24),
-                panel: Color32::from_rgb(0x1A, 0x19, 0x24),
-                pasteboard: Color32::from_rgb(0x0E, 0x0D, 0x14),
-                card: Color32::from_rgb(0x22, 0x20, 0x30),
-                border: Color32::from_rgb(0x36, 0x32, 0x4B),
-                divider: Color32::from_rgb(0x2B, 0x27, 0x3E),
-                text: Color32::from_rgb(0xF4, 0xF2, 0xFF),
-                text_muted: Color32::from_rgb(0xAA, 0xA6, 0xC6),
-                text_faint: Color32::from_rgb(0x92, 0x8C, 0xAF),
-                icon: Color32::from_rgb(0xD8, 0xD4, 0xEE),
-                hover: Color32::from_rgb(0x2A, 0x27, 0x3C),
-                pressed: Color32::from_rgb(0x3A, 0x35, 0x54),
-                selected: Color32::from_rgb(0x35, 0x2B, 0x5C),
-                accent: Color32::from_rgb(0x8B, 0x5C, 0xF6),
-                accent_text: Color32::from_rgb(0xC4, 0xB5, 0xFD),
-                accent_soft: Color32::from_rgb(0x2C, 0x22, 0x50),
-                field: Color32::from_rgb(0x14, 0x13, 0x1D),
-                badge_new: Color32::from_rgb(0x8B, 0x5C, 0xF6),
-                page_shadow: Color32::from_black_alpha(150),
+                titlebar: Color32::from_rgb(0x11, 0x11, 0x14),
+                chrome: Color32::from_rgb(0x11, 0x11, 0x14),
+                panel: Color32::from_rgb(0x18, 0x18, 0x1C),
+                pasteboard: Color32::from_rgb(0x0B, 0x0B, 0x0D),
+                card: Color32::from_rgb(0x18, 0x18, 0x1C),
+                border: Color32::from_rgb(0x2C, 0x2C, 0x34),
+                border_strong: Color32::from_rgb(0x42, 0x42, 0x4E),
+                divider: Color32::from_rgb(0x22, 0x22, 0x28),
+                text: Color32::from_rgb(0xF5, 0xF5, 0xF7),
+                text_muted: Color32::from_rgb(0xB0, 0xB0, 0xBA),
+                text_faint: Color32::from_rgb(0x90, 0x90, 0x9A),
+                icon: Color32::from_rgb(0xD4, 0xD4, 0xD8),
+                hover: Color32::from_rgb(0x22, 0x22, 0x28),
+                pressed: Color32::from_rgb(0x2D, 0x2D, 0x36),
+                selected: Color32::from_rgb(0x2A, 0x2A, 0x34),
+                accent: Color32::from_rgb(0xF5, 0xF5, 0xF7),
+                accent_text: Color32::from_rgb(0xF5, 0xF5, 0xF7),
+                accent_soft: Color32::from_rgb(0x27, 0x27, 0x2F),
+                field: Color32::from_rgb(0x11, 0x11, 0x14),
+                badge_new: Color32::from_rgb(0xF5, 0xF5, 0xF7),
+                glass_fill: Color32::from_rgba_premultiplied(0xFF, 0xFF, 0xFF, 0x0A),
+                glass_hover: Color32::from_rgba_premultiplied(0xFF, 0xFF, 0xFF, 0x14),
+                danger: Color32::from_rgb(0xEF, 0x44, 0x44),
+                success: Color32::from_rgb(0x10, 0xB9, 0x81),
+                warning: Color32::from_rgb(0xF5, 0x9E, 0x0B),
+                page_shadow: Color32::from_black_alpha(140),
                 radius: 8,
             },
         }
@@ -162,7 +180,7 @@ impl Press {
     /// The colour [`Self::wash`] paints.
     pub fn wash_color(self, t: &Tokens, selected: bool) -> Color32 {
         if selected {
-            self.fill(t.accent_soft, t.accent_soft.lerp_to_gamma(t.accent, 0.16), t.selected)
+            self.fill(t.selected, t.selected.lerp_to_gamma(t.hover, 0.2), t.pressed)
         } else {
             self.fill(Color32::TRANSPARENT, t.hover, t.pressed)
         }
@@ -390,13 +408,13 @@ pub fn apply(ctx: &egui::Context, kind: ThemeKind) {
     v.extreme_bg_color = t.field;
     v.faint_bg_color = t.hover;
     v.selection.bg_fill = t.accent_soft;
-    v.selection.stroke = Stroke::new(1.0, t.accent);
-    v.hyperlink_color = t.accent_text;
+    v.selection.stroke = Stroke::new(1.0, t.border_strong);
+    v.hyperlink_color = if t.dark() { Color32::from_rgb(0xF5, 0xF5, 0xF7) } else { Color32::from_rgb(0x11, 0x11, 0x14) };
     v.override_text_color = Some(t.text);
     v.window_corner_radius = CornerRadius::same(10);
     v.menu_corner_radius = CornerRadius::same(8);
-    v.window_shadow = egui::Shadow { offset: [0, 8], blur: 28, spread: 0, color: Color32::from_black_alpha(if t.dark() { 110 } else { 38 }) };
-    v.popup_shadow = egui::Shadow { offset: [0, 4], blur: 16, spread: 0, color: Color32::from_black_alpha(if t.dark() { 90 } else { 30 }) };
+    v.window_shadow = egui::Shadow { offset: [0, 8], blur: 24, spread: 0, color: Color32::from_black_alpha(if t.dark() { 130 } else { 32 }) };
+    v.popup_shadow = egui::Shadow { offset: [0, 4], blur: 16, spread: 0, color: Color32::from_black_alpha(if t.dark() { 100 } else { 24 }) };
     for w in [&mut v.widgets.noninteractive, &mut v.widgets.inactive, &mut v.widgets.hovered, &mut v.widgets.active, &mut v.widgets.open] {
         w.corner_radius = CornerRadius::same(t.radius);
         w.fg_stroke.color = t.text;

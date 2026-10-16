@@ -3904,12 +3904,7 @@ fn edit_text_floating_bar(app: &mut PdfCraftApp, index: usize, area: Rect, ui: &
                 .fill(t.card)
                 .stroke(Stroke::new(1.5, t.accent))
                 .corner_radius(CornerRadius::same(20))
-                .shadow(egui::Shadow {
-                    offset: [0, 6],
-                    blur: 20,
-                    spread: 0,
-                    color: Color32::from_black_alpha(if t.dark() { 120 } else { 35 }),
-                })
+                .shadow(egui::Shadow { offset: [0, 6], blur: 20, spread: 0, color: Color32::from_black_alpha(if t.dark() { 120 } else { 35 }) })
                 .inner_margin(egui::Margin { left: 16, right: 10, top: 7, bottom: 7 })
                 .show(ui, |ui| {
                     ui.horizontal(|ui| {
@@ -3921,24 +3916,12 @@ fn edit_text_floating_bar(app: &mut PdfCraftApp, index: usize, area: Rect, ui: &
                             t.accent,
                         );
                         ui.add_space(20.0);
-                        ui.label(
-                            egui::RichText::new("Editing text & images")
-                                .font(theme::semibold(13.0))
-                                .color(t.text),
-                        );
-                        ui.label(
-                            egui::RichText::new("(Esc)")
-                                .font(theme::regular(11.0))
-                                .color(t.text_faint),
-                        );
+                        ui.label(egui::RichText::new("Editing text & images").font(theme::semibold(13.0)).color(t.text));
+                        ui.label(egui::RichText::new("(Esc)").font(theme::regular(11.0)).color(t.text_faint));
                         ui.add_space(10.0);
-                        let exit_btn = egui::Button::new(
-                            egui::RichText::new("✕ Exit / Disable")
-                                .font(theme::semibold(12.0))
-                                .color(Color32::WHITE),
-                        )
-                        .fill(t.accent)
-                        .corner_radius(CornerRadius::same(12));
+                        let exit_btn = egui::Button::new(egui::RichText::new("✕ Exit / Disable").font(theme::semibold(12.0)).color(Color32::WHITE))
+                            .fill(t.accent)
+                            .corner_radius(CornerRadius::same(12));
                         if ui.add(exit_btn).on_hover_text("Disable editing process and return to select mode").clicked() {
                             app.quick_tool = QuickTool::Select;
                             app.views[index].line_editor = None;

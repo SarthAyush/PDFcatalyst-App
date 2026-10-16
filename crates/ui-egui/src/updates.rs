@@ -24,12 +24,7 @@ pub struct Release {
 
 impl Release {
     pub fn new(version: impl Into<String>, url: impl Into<String>) -> Self {
-        Self {
-            version: version.into(),
-            url: url.into(),
-            download_url: None,
-            asset_name: None,
-        }
+        Self { version: version.into(), url: url.into(), download_url: None, asset_name: None }
     }
 }
 
@@ -37,11 +32,7 @@ impl Release {
 pub type UpdateSource = Arc<dyn Fn() -> Result<Release, String> + Send + Sync>;
 
 /// Asynchronously downloads a release asset with progress updates.
-pub type UpdateDownloader = Arc<
-    dyn Fn(Release, std::sync::mpsc::Sender<DownloadProgress>, Option<egui::Context>)
-        + Send
-        + Sync,
->;
+pub type UpdateDownloader = Arc<dyn Fn(Release, std::sync::mpsc::Sender<DownloadProgress>, Option<egui::Context>) + Send + Sync>;
 
 /// Progress reports sent from the background download thread.
 #[derive(Clone, Debug, PartialEq)]
@@ -177,11 +168,7 @@ impl PdfCraftApp {
                 std::thread::spawn(move || {
                     downloader(release, tx, ctx);
                 });
-                self.updates.download_state = DownloadState::Downloading {
-                    rx,
-                    downloaded: 0,
-                    total: None,
-                };
+                self.updates.download_state = DownloadState::Downloading { rx, downloaded: 0, total: None };
             } else {
                 self.open_url(&release.url);
             }
@@ -228,10 +215,8 @@ impl PdfCraftApp {
                         return;
                     }
                 };
-                if let Ok(ref release) = result {
-                    if is_newer(&release.version, env!("CARGO_PKG_VERSION")) {
-                        self.updates.open = true;
-                    }
+                if result.as_ref().is_ok_and(|release| is_newer(&release.version, env!("CARGO_PKG_VERSION"))) {
+                    self.updates.open = true;
                 }
                 self.updates.check = Check::Done(result);
             }
@@ -289,10 +274,7 @@ pub(crate) fn dialog(app: &mut PdfCraftApp, ctx: &egui::Context) {
             Check::Done(Ok(r)) if is_newer(&r.version, current) => {
                 let version = r.version.trim_start_matches(['v', 'V']);
                 ui.label(egui::RichText::new(format!("PDFCatalyst {version} is available.")).strong());
-                ui.label(
-                    egui::RichText::new(format!("Current version installed: {current}"))
-                        .color(t.text_muted),
-                );
+                ui.label(egui::RichText::new(format!("Current version installed: {current}")).color(t.text_muted));
                 ui.add_space(6.0);
 
                 match &app.updates.download_state {
@@ -308,13 +290,19 @@ pub(crate) fn dialog(app: &mut PdfCraftApp, ctx: &egui::Context) {
                         if let Some(tot) = *total {
                             let mb_tot = tot as f64 / 1_048_576.0;
                             let fraction = (*downloaded as f32 / tot as f32).clamp(0.0, 1.0);
-                            ui.label(egui::RichText::new(format!("Downloading update… {:.1} MB / {:.1} MB ({:.0}%)", mb_down, mb_tot, fraction * 100.0)).font(theme::medium(12.5)).color(t.text));
+                            ui.label(
+                                egui::RichText::new(format!("Downloading update… {:.1} MB / {:.1} MB ({:.0}%)", mb_down, mb_tot, fraction * 100.0))
+                                    .font(theme::medium(12.5))
+                                    .color(t.text),
+                            );
                             ui.add_space(4.0);
                             ui.add(egui::ProgressBar::new(fraction).animate(true));
                         } else {
                             ui.horizontal(|ui| {
                                 ui.spinner();
-                                ui.label(egui::RichText::new(format!("Downloading update… {:.1} MB", mb_down)).font(theme::medium(12.5)).color(t.text));
+                                ui.label(
+                                    egui::RichText::new(format!("Downloading update… {:.1} MB", mb_down)).font(theme::medium(12.5)).color(t.text),
+                                );
                             });
                         }
                     }
@@ -327,7 +315,11 @@ pub(crate) fn dialog(app: &mut PdfCraftApp, ctx: &egui::Context) {
                             .show(ui, |ui| {
                                 ui.horizontal(|ui| {
                                     ui.label(egui::RichText::new("Verified:").font(theme::semibold(12.0)).color(t.accent_text));
-                                    ui.label(egui::RichText::new("Update package ready. Click Install to run setup.").font(theme::medium(12.0)).color(t.text));
+                                    ui.label(
+                                        egui::RichText::new("Update package ready. Click Install to run setup.")
+                                            .font(theme::medium(12.0))
+                                            .color(t.text),
+                                    );
                                 });
                             });
                     }
@@ -335,12 +327,20 @@ pub(crate) fn dialog(app: &mut PdfCraftApp, ctx: &egui::Context) {
                         ui.label(egui::RichText::new("Setup wizard launched. Please follow prompts.").font(theme::medium(12.0)).color(t.text));
                     }
                     DownloadState::Failed(err) => {
-                        ui.label(egui::RichText::new(format!("Download failed: {err}")).font(theme::regular(12.0)).color(Color32::from_rgb(0xe0, 0x40, 0x40)));
+                        ui.label(
+                            egui::RichText::new(format!("Download failed: {err}"))
+                                .font(theme::regular(12.0))
+                                .color(Color32::from_rgb(0xe0, 0x40, 0x40)),
+                        );
                     }
                 }
             }
             Check::Done(Ok(_)) => {
-                ui.label(egui::RichText::new(crate::i18n::fmt(tl!("PDFCatalyst {c} is up to date."), &[("c", current)])).font(theme::semibold(14.0)).color(t.text));
+                ui.label(
+                    egui::RichText::new(crate::i18n::fmt(tl!("PdfCraft {c} is up to date."), &[("c", current)]))
+                        .font(theme::semibold(14.0))
+                        .color(t.text),
+                );
             }
             Check::Done(Err(e)) => {
                 ui.label(crate::i18n::fmt(tl!("Couldn't check for updates: {e}"), &[("e", &e.to_string())]));
@@ -354,11 +354,7 @@ pub(crate) fn dialog(app: &mut PdfCraftApp, ctx: &egui::Context) {
             }
         }
         ui.add_space(10.0);
-        ui.label(
-            egui::RichText::new("PDFCatalyst updates seamlessly without external redirects.")
-                .color(t.text_muted)
-                .small(),
-        );
+        ui.label(egui::RichText::new("PDFCatalyst updates seamlessly without external redirects.").color(t.text_muted).small());
         ui.add_space(12.0);
         ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
             if let Check::Done(Ok(r)) = &app.updates.check {

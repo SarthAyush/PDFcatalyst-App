@@ -7,11 +7,11 @@
 //! - Compress: Optimizes and reduces file sizes across multiple PDFs concurrently.
 //! - Watermark: Stamps custom text watermarks across all pages of all queued documents.
 
+use crate::theme::{self, Tokens};
+use crate::{PdfCraftApp, widgets};
+use egui::{Align2, Color32, CornerRadius, Sense, Stroke, vec2};
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
-use egui::{vec2, Align2, Color32, CornerRadius, Sense, Stroke};
-use crate::theme::{self, Tokens};
-use crate::{widgets, PdfCraftApp};
 
 /// Supported file kinds in the batch queue.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -100,13 +100,7 @@ pub struct BatchWatermarkSettings {
 
 impl Default for BatchWatermarkSettings {
     fn default() -> Self {
-        Self {
-            text: "CONFIDENTIAL".to_string(),
-            opacity: 0.35,
-            font_size: 48.0,
-            rotation: 45.0,
-            color_rgb: [120, 120, 120],
-        }
+        Self { text: "CONFIDENTIAL".to_string(), opacity: 0.35, font_size: 48.0, rotation: 45.0, color_rgb: [120, 120, 120] }
     }
 }
 
@@ -147,16 +141,10 @@ impl BatchStudioState {
             let filename = path.file_name().and_then(|n| n.to_str()).unwrap_or("document").to_string();
             let kind = BatchFileKind::from_path(&path);
             let size_bytes = std::fs::metadata(&path).map(|m| m.len()).unwrap_or(0);
-            
+
             // Avoid duplicate exact paths
             if !self.items.iter().any(|item| item.path == path) {
-                self.items.push(BatchItem {
-                    path,
-                    filename,
-                    kind,
-                    size_bytes,
-                    status: BatchItemStatus::Queued,
-                });
+                self.items.push(BatchItem { path, filename, kind, size_bytes, status: BatchItemStatus::Queued });
             }
         }
         self.status_message = Some(format!("{} files in queue", self.items.len()));
@@ -195,24 +183,11 @@ pub fn show(app: &mut PdfCraftApp, ctx: &egui::Context) {
 
         // Header
         ui.horizontal(|ui| {
-            egui::Frame::NONE
-                .fill(t.accent_soft)
-                .corner_radius(CornerRadius::same(6))
-                .inner_margin(egui::Margin::symmetric(8, 4))
-                .show(ui, |ui| {
-                    ui.label(
-                        egui::RichText::new("HIGH-THROUGHPUT ENGINE")
-                            .font(theme::semibold(10.0))
-                            .color(t.accent_text)
-                            .extra_letter_spacing(0.5),
-                    );
-                });
+            egui::Frame::NONE.fill(t.accent_soft).corner_radius(CornerRadius::same(6)).inner_margin(egui::Margin::symmetric(8, 4)).show(ui, |ui| {
+                ui.label(egui::RichText::new("HIGH-THROUGHPUT ENGINE").font(theme::semibold(10.0)).color(t.accent_text).extra_letter_spacing(0.5));
+            });
             ui.add_space(4.0);
-            ui.label(
-                egui::RichText::new("Batch Workflow Studio")
-                    .font(theme::semibold(18.0))
-                    .color(t.text),
-            );
+            ui.label(egui::RichText::new("Batch Workflow Studio").font(theme::semibold(18.0)).color(t.text));
             ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
                 if widgets::pill_button(ui, "Close", false).clicked() {
                     close = true;
@@ -230,12 +205,7 @@ pub fn show(app: &mut PdfCraftApp, ctx: &egui::Context) {
         // Section 1: Workflow Selector (4 Tabs)
         ui.horizontal(|ui| {
             ui.spacing_mut().item_spacing = vec2(8.0, 0.0);
-            for op in [
-                BatchOperation::Merge,
-                BatchOperation::Convert,
-                BatchOperation::Compress,
-                BatchOperation::Watermark,
-            ] {
+            for op in [BatchOperation::Merge, BatchOperation::Convert, BatchOperation::Compress, BatchOperation::Watermark] {
                 let is_sel = state.operation == op;
                 if widgets::pill_button(ui, op.title(), is_sel).clicked() {
                     state.operation = op;
@@ -243,11 +213,7 @@ pub fn show(app: &mut PdfCraftApp, ctx: &egui::Context) {
             }
         });
         ui.add_space(6.0);
-        ui.label(
-            egui::RichText::new(state.operation.description())
-                .font(theme::regular(11.5))
-                .color(t.text_faint),
-        );
+        ui.label(egui::RichText::new(state.operation.description()).font(theme::regular(11.5)).color(t.text_faint));
         ui.add_space(12.0);
 
         // Config Drawer for specific operations
@@ -330,7 +296,13 @@ pub fn show(app: &mut PdfCraftApp, ctx: &egui::Context) {
                     let (rect, resp) = ui.allocate_exact_size(vec2(ui.available_width(), queue_height - 16.0), Sense::click());
                     let press = theme::Press::track(ui, &resp);
                     let border_col = if resp.hovered() { t.accent } else { t.border };
-                    ui.painter().rect(rect, CornerRadius::same(6), press.fill(t.card, t.hover, t.pressed), Stroke::new(1.0, border_col), egui::StrokeKind::Inside);
+                    ui.painter().rect(
+                        rect,
+                        CornerRadius::same(6),
+                        press.fill(t.card, t.hover, t.pressed),
+                        Stroke::new(1.0, border_col),
+                        egui::StrokeKind::Inside,
+                    );
                     ui.painter().text(
                         rect.center() - vec2(0.0, 10.0),
                         Align2::CENTER_CENTER,
@@ -349,75 +321,74 @@ pub fn show(app: &mut PdfCraftApp, ctx: &egui::Context) {
                         select_more_files = true;
                     }
                 } else {
-                    egui::ScrollArea::vertical()
-                        .max_height(queue_height)
-                        .auto_shrink([false, false])
-                        .show(ui, |ui| {
-                            ui.spacing_mut().item_spacing = vec2(0.0, 4.0);
-                            for (idx, item) in state.items.iter().enumerate() {
-                                ui.horizontal(|ui| {
-                                    ui.set_width(ui.available_width());
+                    egui::ScrollArea::vertical().max_height(queue_height).auto_shrink([false, false]).show(ui, |ui| {
+                        ui.spacing_mut().item_spacing = vec2(0.0, 4.0);
+                        for (idx, item) in state.items.iter().enumerate() {
+                            ui.horizontal(|ui| {
+                                ui.set_width(ui.available_width());
 
-                                    // File kind badge
-                                    let badge_color = match item.kind {
-                                        BatchFileKind::Pdf => Color32::from_rgb(0xDC, 0x26, 0x26),
-                                        BatchFileKind::Image => Color32::from_rgb(0x25, 0x63, 0xEB),
-                                        BatchFileKind::Unsupported => t.text_muted,
-                                    };
-                                    egui::Frame::NONE
-                                        .fill(badge_color.gamma_multiply(0.15))
-                                        .corner_radius(CornerRadius::same(4))
-                                        .inner_margin(egui::Margin::symmetric(6, 2))
-                                        .show(ui, |ui| {
-                                            ui.label(
-                                                egui::RichText::new(item.kind.label())
-                                                    .font(theme::semibold(9.0))
-                                                    .color(badge_color),
-                                            );
-                                        });
-                                    ui.add_space(4.0);
-
-                                    // Filename
-                                    let name_text = if item.filename.len() > 42 {
-                                        format!("{}...{}", &item.filename[..22], &item.filename[item.filename.len() - 16..])
-                                    } else {
-                                        item.filename.clone()
-                                    };
-                                    ui.label(egui::RichText::new(name_text).font(theme::medium(12.0)).color(t.text));
-
-                                    // File size
-                                    ui.add_space(6.0);
-                                    ui.label(
-                                        egui::RichText::new(crate::panels::human_size(item.size_bytes as usize))
-                                            .font(theme::regular(11.0))
-                                            .color(t.text_faint),
-                                    );
-
-                                    // Status & Remove
-                                    ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-                                        if ui.small_button("×").clicked() {
-                                            remove_idx = Some(idx);
-                                        }
-                                        ui.add_space(4.0);
-                                        match &item.status {
-                                            BatchItemStatus::Queued => {
-                                                ui.label(egui::RichText::new("Queued").font(theme::regular(11.0)).color(t.text_muted));
-                                            }
-                                            BatchItemStatus::Processing => {
-                                                ui.label(egui::RichText::new("Processing...").font(theme::semibold(11.0)).color(t.accent));
-                                            }
-                                            BatchItemStatus::Done => {
-                                                ui.label(egui::RichText::new("Done").font(theme::semibold(11.0)).color(Color32::from_rgb(0x16, 0xA3, 0x4A)));
-                                            }
-                                            BatchItemStatus::Failed(err) => {
-                                                ui.label(egui::RichText::new(format!("Error: {err}")).font(theme::regular(11.0)).color(Color32::from_rgb(0xDC, 0x26, 0x26)));
-                                            }
-                                        }
+                                // File kind badge
+                                let badge_color = match item.kind {
+                                    BatchFileKind::Pdf => Color32::from_rgb(0xDC, 0x26, 0x26),
+                                    BatchFileKind::Image => Color32::from_rgb(0x25, 0x63, 0xEB),
+                                    BatchFileKind::Unsupported => t.text_muted,
+                                };
+                                egui::Frame::NONE
+                                    .fill(badge_color.gamma_multiply(0.15))
+                                    .corner_radius(CornerRadius::same(4))
+                                    .inner_margin(egui::Margin::symmetric(6, 2))
+                                    .show(ui, |ui| {
+                                        ui.label(egui::RichText::new(item.kind.label()).font(theme::semibold(9.0)).color(badge_color));
                                     });
+                                ui.add_space(4.0);
+
+                                // Filename
+                                let name_text = if item.filename.len() > 42 {
+                                    format!("{}...{}", &item.filename[..22], &item.filename[item.filename.len() - 16..])
+                                } else {
+                                    item.filename.clone()
+                                };
+                                ui.label(egui::RichText::new(name_text).font(theme::medium(12.0)).color(t.text));
+
+                                // File size
+                                ui.add_space(6.0);
+                                ui.label(
+                                    egui::RichText::new(crate::panels::human_size(item.size_bytes as usize))
+                                        .font(theme::regular(11.0))
+                                        .color(t.text_faint),
+                                );
+
+                                // Status & Remove
+                                ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+                                    if ui.small_button("×").clicked() {
+                                        remove_idx = Some(idx);
+                                    }
+                                    ui.add_space(4.0);
+                                    match &item.status {
+                                        BatchItemStatus::Queued => {
+                                            ui.label(egui::RichText::new("Queued").font(theme::regular(11.0)).color(t.text_muted));
+                                        }
+                                        BatchItemStatus::Processing => {
+                                            ui.label(egui::RichText::new("Processing...").font(theme::semibold(11.0)).color(t.accent));
+                                        }
+                                        BatchItemStatus::Done => {
+                                            ui.label(
+                                                egui::RichText::new("Done").font(theme::semibold(11.0)).color(Color32::from_rgb(0x16, 0xA3, 0x4A)),
+                                            );
+                                        }
+                                        BatchItemStatus::Failed(err) => {
+                                            ui.label(
+                                                egui::RichText::new(format!("Error: {err}"))
+                                                    .font(theme::regular(11.0))
+                                                    .color(Color32::from_rgb(0xDC, 0x26, 0x26)),
+                                            );
+                                        }
+                                    }
                                 });
-                                ui.separator();
-                            }
-                        });
+                            });
+                            ui.separator();
+                        }
+                    });
                 }
             });
         ui.add_space(14.0);
@@ -455,10 +426,10 @@ pub fn show(app: &mut PdfCraftApp, ctx: &egui::Context) {
         if clear_all {
             state.clear();
         }
-        if let Some(idx) = remove_idx {
-            if idx < state.items.len() {
-                state.items.remove(idx);
-            }
+        if let Some(idx) = remove_idx
+            && idx < state.items.len()
+        {
+            state.items.remove(idx);
         }
     }
 
@@ -488,10 +459,10 @@ impl PdfCraftApp {
             .add_filter("Images", &["png", "jpg", "jpeg", "webp", "bmp", "tiff", "gif"])
             .pick_files();
 
-        if let Some(paths) = files {
-            if let Some(state) = &mut self.batch_studio {
-                state.add_paths(paths);
-            }
+        if let Some(paths) = files
+            && let Some(state) = &mut self.batch_studio
+        {
+            state.add_paths(paths);
         }
     }
 
@@ -708,11 +679,7 @@ impl PdfCraftApp {
             }
         }
 
-        let saved_str = if total_saved > 0 {
-            format!(" Saved {}", crate::panels::human_size(total_saved as usize))
-        } else {
-            "".to_string()
-        };
+        let saved_str = if total_saved > 0 { format!(" Saved {}", crate::panels::human_size(total_saved as usize)) } else { "".to_string() };
 
         if let Some(state) = &mut self.batch_studio {
             state.total_processed = success;
@@ -739,11 +706,7 @@ impl PdfCraftApp {
             source: None,
             scale: 1.0,
             font_size: wm.font_size as f64,
-            color: [
-                wm.color_rgb[0] as f64 / 255.0,
-                wm.color_rgb[1] as f64 / 255.0,
-                wm.color_rgb[2] as f64 / 255.0,
-            ],
+            color: [wm.color_rgb[0] as f64 / 255.0, wm.color_rgb[1] as f64 / 255.0, wm.color_rgb[2] as f64 / 255.0],
             opacity: wm.opacity as f64,
             rotation: wm.rotation as f64,
             behind: false,

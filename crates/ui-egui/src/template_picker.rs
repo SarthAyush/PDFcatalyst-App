@@ -58,11 +58,19 @@ pub const INVOICE_STYLES: &[TemplateStyleOption] = &[
     TemplateStyleOption { name: "Executive Header Banner", desc: "Full-bleed solid accent top banner with reversed white branding", badge: "Bold" },
     TemplateStyleOption { name: "Tech Stripe Modern", desc: "Vertical accent bar framing the left margin with tag badges", badge: "Modern" },
     TemplateStyleOption { name: "Perimeter Box Framing", desc: "Structured formal perimeter frame with inset client cards", badge: "Classic" },
-    TemplateStyleOption { name: "Split Ledger Dual-Tone", desc: "Two-tone alternating line items with bold accent total due callout", badge: "Detailed" },
+    TemplateStyleOption {
+        name: "Split Ledger Dual-Tone",
+        desc: "Two-tone alternating line items with bold accent total due callout",
+        badge: "Detailed",
+    },
     TemplateStyleOption { name: "Compact Agency", desc: "High-density itemization tailored for multi-deliverable design studios", badge: "Compact" },
     TemplateStyleOption { name: "Creative Studio", desc: "Prominent billed-to cards with rounded highlights and wire details", badge: "Studio" },
     TemplateStyleOption { name: "International Swiss", desc: "Minimalist typographic hierarchy with clear VAT and IBAN fields", badge: "Swiss" },
-    TemplateStyleOption { name: "Consulting Statement", desc: "Milestone breakdown with consultant hours and hourly rate totals", badge: "Consulting" },
+    TemplateStyleOption {
+        name: "Consulting Statement",
+        desc: "Milestone breakdown with consultant hours and hourly rate totals",
+        badge: "Consulting",
+    },
     TemplateStyleOption { name: "Freelance Simple", desc: "Quick streamlined invoice with prominent net-30 payment due banner", badge: "Simple" },
 ];
 
@@ -70,35 +78,87 @@ pub const RESUME_STYLES: &[TemplateStyleOption] = &[
     TemplateStyleOption { name: "Modern Split-Column", desc: "Left colored accent sidebar with technical skills & right timeline", badge: "Sidebar" },
     TemplateStyleOption { name: "Executive Serif Classic", desc: "Single-column traditional layout with elegant rule dividers", badge: "Classic" },
     TemplateStyleOption { name: "Silicon Valley Tech", desc: "Clean tags, condensed experience, and highlighted GitHub repos", badge: "Tech" },
-    TemplateStyleOption { name: "Creative Director", desc: "Accent header badge, dual-tone typography, and skill proficiency chips", badge: "Creative" },
+    TemplateStyleOption {
+        name: "Creative Director",
+        desc: "Accent header badge, dual-tone typography, and skill proficiency chips",
+        badge: "Creative",
+    },
     TemplateStyleOption { name: "Academic CV", desc: "Comprehensive sections for publications, grants, and teaching tenure", badge: "Academic" },
     TemplateStyleOption { name: "Startup Generalist", desc: "Compact impact-driven layout emphasizing key business metrics", badge: "Metrics" },
-    TemplateStyleOption { name: "Minimalist Scandinavian", desc: "Generous whitespace, subtle divider rules, and clean date alignment", badge: "Clean" },
-    TemplateStyleOption { name: "Engineering Architect", desc: "Emphasis on system architecture, fault tolerance, and backend scale", badge: "Engineering" },
+    TemplateStyleOption {
+        name: "Minimalist Scandinavian",
+        desc: "Generous whitespace, subtle divider rules, and clean date alignment",
+        badge: "Clean",
+    },
+    TemplateStyleOption {
+        name: "Engineering Architect",
+        desc: "Emphasis on system architecture, fault tolerance, and backend scale",
+        badge: "Engineering",
+    },
     TemplateStyleOption { name: "Data Scientist & AI", desc: "Model deployment highlights, tech stack pills, and research papers", badge: "Data/AI" },
     TemplateStyleOption { name: "Product Leadership", desc: "Focus on cross-functional roadmap execution and product KPIs", badge: "Leadership" },
 ];
 
 pub const PROPOSAL_STYLES: &[TemplateStyleOption] = &[
-    TemplateStyleOption { name: "Executive Presentation", desc: "Formal title cover page, scope of work, and executive sign-off blocks", badge: "Executive" },
+    TemplateStyleOption {
+        name: "Executive Presentation",
+        desc: "Formal title cover page, scope of work, and executive sign-off blocks",
+        badge: "Executive",
+    },
     TemplateStyleOption { name: "Enterprise RFP Bid", desc: "Structured technical compliance matrix, SLAs, and architecture", badge: "Enterprise" },
-    TemplateStyleOption { name: "Creative Agency Pitch", desc: "Vibrant cover card, visual milestone schedule, and asset deliverables", badge: "Creative" },
-    TemplateStyleOption { name: "Software Architecture Scope", desc: "System design specifications, sprint breakdown, and cloud infrastructure", badge: "Software" },
-    TemplateStyleOption { name: "Consulting Retainer", desc: "Strategic advisory roadmaps, monthly commitments, and rate schedule", badge: "Consulting" },
-    TemplateStyleOption { name: "Government Grant Bid", desc: "Formal structured layout with compliance checkpoints and budget audit", badge: "Grant" },
+    TemplateStyleOption {
+        name: "Creative Agency Pitch",
+        desc: "Vibrant cover card, visual milestone schedule, and asset deliverables",
+        badge: "Creative",
+    },
+    TemplateStyleOption {
+        name: "Software Architecture Scope",
+        desc: "System design specifications, sprint breakdown, and cloud infrastructure",
+        badge: "Software",
+    },
+    TemplateStyleOption {
+        name: "Consulting Retainer",
+        desc: "Strategic advisory roadmaps, monthly commitments, and rate schedule",
+        badge: "Consulting",
+    },
+    TemplateStyleOption {
+        name: "Government Grant Bid",
+        desc: "Formal structured layout with compliance checkpoints and budget audit",
+        badge: "Grant",
+    },
     TemplateStyleOption { name: "Venture Memo", desc: "Problem statement, traction metrics, unit economics, and roadmap", badge: "Venture" },
     TemplateStyleOption { name: "SaaS Agreement", desc: "Tiered pricing table, uptime guarantees, and payment schedule", badge: "SaaS" },
-    TemplateStyleOption { name: "Turnkey Implementation", desc: "Sprint breakdowns, resource allocation, and mutual signature block", badge: "Turnkey" },
+    TemplateStyleOption {
+        name: "Turnkey Implementation",
+        desc: "Sprint breakdowns, resource allocation, and mutual signature block",
+        badge: "Turnkey",
+    },
     TemplateStyleOption { name: "Marketing Campaign", desc: "Campaign deliverables, target audience matrix, and projected ROI", badge: "Marketing" },
 ];
 
 pub const NOTEBOOK_STYLES: &[TemplateStyleOption] = &[
-    TemplateStyleOption { name: "5mm Dot Grid Matrix", desc: "Subtle dot matrix ideal for bullet journaling, UI sketches & diagrams", badge: "Dot Grid" },
-    TemplateStyleOption { name: "Cornell Research Notes", desc: "Wide left cue column, lecture notes area, and bottom summary block", badge: "Cornell" },
-    TemplateStyleOption { name: "Engineering Graph Paper", desc: "5mm precision isometric grid for calculations and technical drawings", badge: "Grid" },
+    TemplateStyleOption {
+        name: "5mm Dot Grid Matrix",
+        desc: "Subtle dot matrix ideal for bullet journaling, UI sketches & diagrams",
+        badge: "Dot Grid",
+    },
+    TemplateStyleOption {
+        name: "Cornell Research Notes",
+        desc: "Wide left cue column, lecture notes area, and bottom summary block",
+        badge: "Cornell",
+    },
+    TemplateStyleOption {
+        name: "Engineering Graph Paper",
+        desc: "5mm precision isometric grid for calculations and technical drawings",
+        badge: "Grid",
+    },
     TemplateStyleOption { name: "College Ruled Clean", desc: "7.1mm standard horizontal ruling with red left margin baseline", badge: "Lined" },
     TemplateStyleOption { name: "Daily Time-Blocked Log", desc: "Hourly schedule agenda with prioritized task checkboxes", badge: "Planner" },
-    TemplateStyleOption { name: "Laboratory Experiment Log", desc: "Formal hypothesis, apparatus notes, data table & witness signature", badge: "Lab" },
+    TemplateStyleOption {
+        name: "Laboratory Experiment Log",
+        desc: "Formal hypothesis, apparatus notes, data table & witness signature",
+        badge: "Lab",
+    },
     TemplateStyleOption { name: "UI/UX Wireframe Book", desc: "Dual-viewport sketching frames with annotation lines underneath", badge: "Wireframe" },
     TemplateStyleOption { name: "Meeting Action Pad", desc: "Attendee roster, agenda points, decisions, and action owners", badge: "Meeting" },
     TemplateStyleOption { name: "Code Scratchpad", desc: "Dual-column monospace numbered rows for algorithms and pseudo-code", badge: "Code" },
@@ -109,12 +169,28 @@ pub const CERTIFICATE_STYLES: &[TemplateStyleOption] = &[
     TemplateStyleOption { name: "Ornate Dual-Border", desc: "Classic double guilloche-inspired border with corner brackets", badge: "Ornate" },
     TemplateStyleOption { name: "Header Banner Ribbon", desc: "Bold colored top ribbon with official commendation badge", badge: "Banner" },
     TemplateStyleOption { name: "Modern Minimalist Frame", desc: "Clean geometric perimeter lines with contemporary typography", badge: "Modern" },
-    TemplateStyleOption { name: "Corporate Excellence Award", desc: "Distinguished corporate achievement award with gold seal block", badge: "Excellence" },
+    TemplateStyleOption {
+        name: "Corporate Excellence Award",
+        desc: "Distinguished corporate achievement award with gold seal block",
+        badge: "Excellence",
+    },
     TemplateStyleOption { name: "Academic Diploma", desc: "Formal Latinate typography with dual authority verification lines", badge: "Diploma" },
     TemplateStyleOption { name: "Technical Certification", desc: "Competency badge with official verification ID placeholder", badge: "Technical" },
-    TemplateStyleOption { name: "Appreciation & Service", desc: "Warm appreciation border for dedicated volunteer or tenure service", badge: "Service" },
-    TemplateStyleOption { name: "Leadership Fellowship", desc: "Executive fellowship recognition with distinguished crest emblem", badge: "Leadership" },
-    TemplateStyleOption { name: "Course Completion", desc: "Accredited training completion certificate with hours and instructor signature", badge: "Course" },
+    TemplateStyleOption {
+        name: "Appreciation & Service",
+        desc: "Warm appreciation border for dedicated volunteer or tenure service",
+        badge: "Service",
+    },
+    TemplateStyleOption {
+        name: "Leadership Fellowship",
+        desc: "Executive fellowship recognition with distinguished crest emblem",
+        badge: "Leadership",
+    },
+    TemplateStyleOption {
+        name: "Course Completion",
+        desc: "Accredited training completion certificate with hours and instructor signature",
+        badge: "Course",
+    },
     TemplateStyleOption { name: "Quarterly MVP Award", desc: "Radiant accent corners and star commendation for standout impact", badge: "MVP" },
 ];
 
@@ -168,19 +244,11 @@ pub fn show(app: &mut PdfCraftApp, ctx: &egui::Context) {
 
         // Header Title
         ui.horizontal(|ui| {
-            egui::Frame::NONE
-                .fill(t.accent_soft)
-                .corner_radius(CornerRadius::same(6))
-                .inner_margin(egui::Margin::symmetric(8, 4))
-                .show(ui, |ui| {
-                    ui.label(egui::RichText::new("PARAMETRIC STUDIO").font(theme::semibold(10.0)).color(t.accent_text));
-                });
+            egui::Frame::NONE.fill(t.accent_soft).corner_radius(CornerRadius::same(6)).inner_margin(egui::Margin::symmetric(8, 4)).show(ui, |ui| {
+                ui.label(egui::RichText::new("PARAMETRIC STUDIO").font(theme::semibold(10.0)).color(t.accent_text));
+            });
             ui.add_space(4.0);
-            ui.label(
-                egui::RichText::new(format!("{category_title} Customizer"))
-                    .font(theme::semibold(17.0))
-                    .color(t.text),
-            );
+            ui.label(egui::RichText::new(format!("{category_title} Customizer")).font(theme::semibold(17.0)).color(t.text));
         });
         ui.add_space(2.0);
         ui.label(
@@ -192,12 +260,7 @@ pub fn show(app: &mut PdfCraftApp, ctx: &egui::Context) {
 
         // Section 1: Accent Color Palettes
         ui.horizontal(|ui| {
-            ui.label(
-                egui::RichText::new("ACCENT PALETTE")
-                    .font(theme::semibold(10.5))
-                    .color(t.text_muted)
-                    .extra_letter_spacing(0.5),
-            );
+            ui.label(egui::RichText::new("ACCENT PALETTE").font(theme::semibold(10.5)).color(t.text_muted).extra_letter_spacing(0.5));
             ui.add_space(6.0);
             let active_pal = PALETTES[selected_color].0;
             ui.label(egui::RichText::new(format!("({active_pal})")).font(theme::medium(11.0)).color(t.accent_text));
@@ -211,11 +274,7 @@ pub fn show(app: &mut PdfCraftApp, ctx: &egui::Context) {
                 let (rect, resp) = ui.allocate_exact_size(vec2(88.0, 32.0), Sense::click());
                 resp.widget_info(|| egui::WidgetInfo::labeled(egui::WidgetType::Button, true, *pal_name));
                 let press = theme::Press::track(ui, &resp);
-                let fill = if is_sel {
-                    t.hover
-                } else {
-                    press.fill(t.card, t.hover, t.pressed)
-                };
+                let fill = if is_sel { t.hover } else { press.fill(t.card, t.hover, t.pressed) };
                 let border_stroke = if is_sel {
                     Stroke::new(1.8, *pal_color)
                 } else if resp.hovered() {
@@ -250,81 +309,59 @@ pub fn show(app: &mut PdfCraftApp, ctx: &egui::Context) {
         // Section 2: Layout Variations List
         let active_color = PALETTES[selected_color].2;
         ui.horizontal(|ui| {
-            ui.label(
-                egui::RichText::new("LAYOUT VARIATION")
-                    .font(theme::semibold(10.5))
-                    .color(t.text_muted)
-                    .extra_letter_spacing(0.5),
-            );
+            ui.label(egui::RichText::new("LAYOUT VARIATION").font(theme::semibold(10.5)).color(t.text_muted).extra_letter_spacing(0.5));
             ui.add_space(6.0);
-            ui.label(
-                egui::RichText::new(format!("({} Available Presets)", styles.len()))
-                    .font(theme::medium(11.0))
-                    .color(t.text_faint),
-            );
+            ui.label(egui::RichText::new(format!("({} Available Presets)", styles.len())).font(theme::medium(11.0)).color(t.text_faint));
         });
         ui.add_space(6.0);
 
-        egui::ScrollArea::vertical()
-            .max_height(240.0)
-            .auto_shrink([false, false])
-            .show(ui, |ui| {
-                ui.spacing_mut().item_spacing = vec2(0.0, 6.0);
-                for (idx, opt) in styles.iter().enumerate() {
-                    let is_sel = selected_style == idx;
-                    let (rect, resp) = ui.allocate_exact_size(vec2(ui.available_width() - 8.0, 48.0), Sense::click());
-                    resp.widget_info(|| egui::WidgetInfo::labeled(egui::WidgetType::Button, true, opt.name));
-                    let press = theme::Press::track(ui, &resp);
-                    let fill = if is_sel {
-                        t.hover
-                    } else {
-                        press.fill(t.card, t.hover, t.pressed)
-                    };
-                    let border_stroke = if is_sel {
-                        Stroke::new(1.6, active_color)
-                    } else if resp.hovered() {
-                        Stroke::new(1.0, active_color.gamma_multiply(0.5))
-                    } else {
-                        Stroke::new(1.0, t.border)
-                    };
-                    ui.painter().rect(rect, CornerRadius::same(8), fill, border_stroke, egui::StrokeKind::Inside);
+        egui::ScrollArea::vertical().max_height(240.0).auto_shrink([false, false]).show(ui, |ui| {
+            ui.spacing_mut().item_spacing = vec2(0.0, 6.0);
+            for (idx, opt) in styles.iter().enumerate() {
+                let is_sel = selected_style == idx;
+                let (rect, resp) = ui.allocate_exact_size(vec2(ui.available_width() - 8.0, 48.0), Sense::click());
+                resp.widget_info(|| egui::WidgetInfo::labeled(egui::WidgetType::Button, true, opt.name));
+                let press = theme::Press::track(ui, &resp);
+                let fill = if is_sel { t.hover } else { press.fill(t.card, t.hover, t.pressed) };
+                let border_stroke = if is_sel {
+                    Stroke::new(1.6, active_color)
+                } else if resp.hovered() {
+                    Stroke::new(1.0, active_color.gamma_multiply(0.5))
+                } else {
+                    Stroke::new(1.0, t.border)
+                };
+                ui.painter().rect(rect, CornerRadius::same(8), fill, border_stroke, egui::StrokeKind::Inside);
 
-                    // Number badge
-                    let num_text = format!("{:02}", idx + 1);
-                    let num_rect = Rect::from_center_size(rect.left_center() + vec2(22.0, 0.0), vec2(24.0, 24.0));
-                    let num_bg = if is_sel { active_color.gamma_multiply(0.2) } else { t.pasteboard };
-                    let num_fg = if is_sel { active_color } else { t.text_muted };
-                    ui.painter().rect(num_rect, CornerRadius::same(6), num_bg, Stroke::NONE, egui::StrokeKind::Inside);
-                    ui.painter().text(num_rect.center(), Align2::CENTER_CENTER, num_text, theme::semibold(11.0), num_fg);
+                // Number badge
+                let num_text = format!("{:02}", idx + 1);
+                let num_rect = Rect::from_center_size(rect.left_center() + vec2(22.0, 0.0), vec2(24.0, 24.0));
+                let num_bg = if is_sel { active_color.gamma_multiply(0.2) } else { t.pasteboard };
+                let num_fg = if is_sel { active_color } else { t.text_muted };
+                ui.painter().rect(num_rect, CornerRadius::same(6), num_bg, Stroke::NONE, egui::StrokeKind::Inside);
+                ui.painter().text(num_rect.center(), Align2::CENTER_CENTER, num_text, theme::semibold(11.0), num_fg);
 
-                    // Title & Description
-                    let title_pos = rect.min + vec2(46.0, 9.0);
-                    ui.painter().text(
-                        title_pos,
-                        Align2::LEFT_TOP,
-                        opt.name,
-                        if is_sel { theme::semibold(12.5) } else { theme::medium(12.5) },
-                        t.text,
-                    );
+                // Title & Description
+                let title_pos = rect.min + vec2(46.0, 9.0);
+                ui.painter().text(title_pos, Align2::LEFT_TOP, opt.name, if is_sel { theme::semibold(12.5) } else { theme::medium(12.5) }, t.text);
 
-                    let desc_pos = rect.min + vec2(46.0, 26.0);
-                    let mut desc_job = egui::text::LayoutJob::simple_singleline(opt.desc.to_owned(), theme::regular(10.5), t.text_muted);
-                    desc_job.wrap = egui::text::TextWrapping::truncate_at_width(rect.width() - 150.0);
-                    let desc_galley = ui.fonts_mut(|f| f.layout_job(desc_job));
-                    ui.painter().galley(desc_pos, desc_galley, t.text_muted);
+                let desc_pos = rect.min + vec2(46.0, 26.0);
+                let mut desc_job = egui::text::LayoutJob::simple_singleline(opt.desc.to_owned(), theme::regular(10.5), t.text_muted);
+                desc_job.wrap = egui::text::TextWrapping::truncate_at_width(rect.width() - 150.0);
+                let desc_galley = ui.fonts_mut(|f| f.layout_job(desc_job));
+                ui.painter().galley(desc_pos, desc_galley, t.text_muted);
 
-                    // Badge tag on right
-                    let badge_rect = Rect::from_center_size(rect.right_center() - vec2(48.0, 0.0), vec2(70.0, 20.0));
-                    let badge_fill = if is_sel { active_color.gamma_multiply(0.18) } else { t.hover };
-                    let badge_color = if is_sel { active_color } else { t.text_muted };
-                    ui.painter().rect(badge_rect, CornerRadius::same(5), badge_fill, Stroke::NONE, egui::StrokeKind::Inside);
-                    ui.painter().text(badge_rect.center(), Align2::CENTER_CENTER, opt.badge, theme::semibold(9.5), badge_color);
+                // Badge tag on right
+                let badge_rect = Rect::from_center_size(rect.right_center() - vec2(48.0, 0.0), vec2(70.0, 20.0));
+                let badge_fill = if is_sel { active_color.gamma_multiply(0.18) } else { t.hover };
+                let badge_color = if is_sel { active_color } else { t.text_muted };
+                ui.painter().rect(badge_rect, CornerRadius::same(5), badge_fill, Stroke::NONE, egui::StrokeKind::Inside);
+                ui.painter().text(badge_rect.center(), Align2::CENTER_CENTER, opt.badge, theme::semibold(9.5), badge_color);
 
-                    if theme::hand(resp).clicked() {
-                        selected_style = idx;
-                    }
+                if theme::hand(resp).clicked() {
+                    selected_style = idx;
                 }
-            });
+            }
+        });
 
         ui.add_space(12.0);
 
@@ -365,11 +402,7 @@ pub fn show(app: &mut PdfCraftApp, ctx: &egui::Context) {
 
         // Section 4: Footer Actions
         ui.horizontal(|ui| {
-            ui.label(
-                egui::RichText::new("Vector PDF generated in memory")
-                    .font(theme::regular(11.0))
-                    .color(t.text_faint),
-            );
+            ui.label(egui::RichText::new("Vector PDF generated in memory").font(theme::regular(11.0)).color(t.text_faint));
             ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
                 if widgets::pill_button(ui, "Create & Open Template →", true).clicked() {
                     create = true;
@@ -398,11 +431,8 @@ pub fn show(app: &mut PdfCraftApp, ctx: &egui::Context) {
         app.create_styled_template_document(default_filename, category_key, selected_style, rgb);
     } else if export_pdf {
         let (_, rgb, _) = PALETTES[selected_color.min(PALETTES.len() - 1)];
-        let file_path = rfd::FileDialog::new()
-            .set_title("Export Template PDF")
-            .set_file_name(default_filename)
-            .add_filter("PDF Document", &["pdf"])
-            .save_file();
+        let file_path =
+            rfd::FileDialog::new().set_title("Export Template PDF").set_file_name(default_filename).add_filter("PDF Document", &["pdf"]).save_file();
         if let Some(path) = file_path {
             match app.session.create_styled_template(category_key, selected_style, rgb) {
                 Ok(bytes) => {
@@ -420,18 +450,14 @@ pub fn show(app: &mut PdfCraftApp, ctx: &egui::Context) {
         }
     } else if save_custom {
         let (_, rgb, _) = PALETTES[selected_color.min(PALETTES.len() - 1)];
-        let title = if custom_title.trim().is_empty() {
-            styles[selected_style].name.to_string()
-        } else {
-            custom_title.trim().to_string()
-        };
-        let desc = if custom_desc.trim().is_empty() {
-            styles[selected_style].desc.to_string()
-        } else {
-            custom_desc.trim().to_string()
-        };
+        let title = if custom_title.trim().is_empty() { styles[selected_style].name.to_string() } else { custom_title.trim().to_string() };
+        let desc = if custom_desc.trim().is_empty() { styles[selected_style].desc.to_string() } else { custom_desc.trim().to_string() };
         app.custom_templates.push(CustomTemplate {
-            id: format!("{}_{}", category_key, std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).map(|d| d.as_millis()).unwrap_or(0)),
+            id: format!(
+                "{}_{}",
+                category_key,
+                std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).map(|d| d.as_millis()).unwrap_or(0)
+            ),
             title: title.clone(),
             description: desc,
             category_key: category_key.to_string(),

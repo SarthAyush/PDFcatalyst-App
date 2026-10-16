@@ -38,11 +38,7 @@ pub fn latest_release() -> Result<Release, String> {
 }
 
 /// Downloads the release update installer into a temporary folder, reporting progress.
-pub fn download_update(
-    release: Release,
-    tx: std::sync::mpsc::Sender<pdfcraft_ui_egui::updates::DownloadProgress>,
-    ctx: Option<egui::Context>,
-) {
+pub fn download_update(release: Release, tx: std::sync::mpsc::Sender<pdfcraft_ui_egui::updates::DownloadProgress>, ctx: Option<egui::Context>) {
     let _ = tx.send(pdfcraft_ui_egui::updates::DownloadProgress::Connecting);
     if let Some(ctx) = &ctx {
         ctx.request_repaint();
@@ -94,11 +90,7 @@ pub fn download_update(
         return;
     }
 
-    let total: Option<u64> = response
-        .headers()
-        .get("content-length")
-        .and_then(|v| v.to_str().ok())
-        .and_then(|s| s.parse::<u64>().ok());
+    let total: Option<u64> = response.headers().get("content-length").and_then(|v| v.to_str().ok()).and_then(|s| s.parse::<u64>().ok());
 
     let temp_dir = std::env::temp_dir().join("CraftPDF_Updates");
     if let Err(e) = std::fs::create_dir_all(&temp_dir) {
@@ -131,10 +123,7 @@ pub fn download_update(
                 }
                 downloaded += n as u64;
                 if last_report.elapsed() > Duration::from_millis(80) {
-                    let _ = tx.send(pdfcraft_ui_egui::updates::DownloadProgress::Downloading {
-                        downloaded,
-                        total,
-                    });
+                    let _ = tx.send(pdfcraft_ui_egui::updates::DownloadProgress::Downloading { downloaded, total });
                     if let Some(ctx) = &ctx {
                         ctx.request_repaint();
                     }
@@ -204,14 +193,14 @@ fn parse(body: &str) -> Result<Release, String> {
     let mut asset_name = None;
 
     if let Some(assets) = v["assets"].as_array() {
-        let chosen = assets.iter().find(|a| {
-            let name = a["name"].as_str().unwrap_or("").to_lowercase();
-            name.ends_with(".exe") && (name.contains("setup") || name.contains("install"))
-        }).or_else(|| {
-            assets.iter().find(|a| {
-                a["name"].as_str().unwrap_or("").to_lowercase().ends_with(".exe")
+        let chosen = assets
+            .iter()
+            .find(|a| {
+                let name = a["name"].as_str().unwrap_or("").to_lowercase();
+                name.ends_with(".exe") && (name.contains("setup") || name.contains("install"))
             })
-        }).or_else(|| assets.first());
+            .or_else(|| assets.iter().find(|a| a["name"].as_str().unwrap_or("").to_lowercase().ends_with(".exe")))
+            .or_else(|| assets.first());
 
         if let Some(asset) = chosen {
             if let Some(dl) = asset["browser_download_url"].as_str() {
@@ -223,12 +212,7 @@ fn parse(body: &str) -> Result<Release, String> {
         }
     }
 
-    Ok(Release {
-        version,
-        url,
-        download_url,
-        asset_name,
-    })
+    Ok(Release { version, url, download_url, asset_name })
 }
 
 #[cfg(test)]
@@ -239,7 +223,8 @@ mod tests {
     fn answers_are_read_and_only_our_release_pages_are_offered() {
         let r = parse(r#"{"tag_name":"v0.2.0","html_url":"https://github.com/SarthAyush/PDFcatalyst-App/releases/tag/v0.2.0"}"#).unwrap();
         assert_eq!(r, Release::new("v0.2.0", "https://github.com/SarthAyush/PDFcatalyst-App/releases/tag/v0.2.0"));
-        for elsewhere in ["https://example.com/pdfcraft.exe", "https://github.com/SarthAyush/PDFcatalyst-App/releases.evil/x", "javascript:alert(1)"] {
+        for elsewhere in ["https://example.com/pdfcraft.exe", "https://github.com/SarthAyush/PDFcatalyst-App/releases.evil/x", "javascript:alert(1)"]
+        {
             let r = parse(&format!(r#"{{"tag_name":"v9.9.9","html_url":"{elsewhere}"}}"#)).unwrap();
             assert_eq!(r.url, RELEASES_PAGE, "{elsewhere}");
         }

@@ -7,8 +7,8 @@ use pdfcraft_cos::{Dict, Document, ObjRef, Object, PdfString, Stream};
 mod extract;
 pub use extract::{ExtractedImage, ImageExport, extract_images, image_file};
 mod templates;
-pub use templates::generate_template;
 use pdfcraft_fonts::{literal, win_ansi, wrap};
+pub use templates::generate_template;
 
 #[derive(Debug, thiserror::Error, PartialEq)]
 pub enum CreateError {

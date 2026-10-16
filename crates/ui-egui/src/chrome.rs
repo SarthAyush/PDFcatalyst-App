@@ -55,7 +55,8 @@ pub fn tab_strip(app: &mut PdfCraftApp, ui: &mut egui::Ui) {
                 let reconfig_text = "Configured by Sarthak";
                 let reconfig_width = ui.fonts_mut(|f| f.layout_no_wrap(reconfig_text.into(), theme::medium(10.5), t.text).size().x) + 16.0;
                 // Keep the icon buttons, GitHub's text/padding, reconfig text and gaps outside the scrolling tabs.
-                let controls_width = ui.fonts_mut(|f| f.layout_no_wrap("GitHub".into(), theme::medium(13.0), t.text).size().x) + 3.0 * button + 64.0 + reconfig_width;
+                let controls_width =
+                    ui.fonts_mut(|f| f.layout_no_wrap("GitHub".into(), theme::medium(13.0), t.text).size().x) + 3.0 * button + 64.0 + reconfig_width;
                 // Open stays in sight after the tabs: its icon, text and padding, and the gaps around it.
                 let open_width = ui.fonts_mut(|f| f.layout_no_wrap(tl!("Open").into(), theme::medium(13.0), t.text).size().x) + 38.0 + 12.0;
                 let mut tabs_width = (ui.available_width() - controls_width - open_width).max(0.0);
@@ -198,12 +199,8 @@ pub fn tab_strip(app: &mut PdfCraftApp, ui: &mut egui::Ui) {
                 ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
                     // Rightmost corner: Notification Viewer Bell Button
                     let has_update = app.has_update_available();
-                    let bell_tip = if has_update {
-                        "Updates & Notifications (Update available!)"
-                    } else {
-                        "Updates & Notifications"
-                    };
-                    let resp = icons::button(ui, "bell", button, app.notification_viewer_open, &bell_tip);
+                    let bell_tip = if has_update { "Updates & Notifications (Update available!)" } else { "Updates & Notifications" };
+                    let resp = icons::button(ui, "bell", button, app.notification_viewer_open, bell_tip);
                     if has_update {
                         let dot_center = resp.rect.right_top() + vec2(-4.0, 4.0);
                         ui.painter().circle_filled(dot_center, 3.5, Color32::from_rgb(0xe0, 0x40, 0x40));
@@ -246,11 +243,7 @@ pub fn tab_strip(app: &mut PdfCraftApp, ui: &mut egui::Ui) {
                         .corner_radius(CornerRadius::same(5))
                         .inner_margin(egui::Margin::symmetric(8, 3))
                         .show(ui, |ui| {
-                            ui.label(
-                                egui::RichText::new("Configured by Sarthak")
-                                    .font(theme::medium(10.5))
-                                    .color(t.text_muted),
-                            );
+                            ui.label(egui::RichText::new("Configured by Sarthak").font(theme::medium(10.5)).color(t.text_muted));
                         });
                 });
             });
@@ -308,12 +301,7 @@ pub fn notification_viewer(app: &mut PdfCraftApp, ctx: &egui::Context) {
                 .fill(t.card)
                 .stroke(Stroke::new(1.0, t.border))
                 .corner_radius(CornerRadius::same(12))
-                .shadow(egui::Shadow {
-                    offset: [0, 8],
-                    blur: 24,
-                    spread: 0,
-                    color: t.page_shadow.gamma_multiply(0.9),
-                })
+                .shadow(egui::Shadow { offset: [0, 8], blur: 24, spread: 0, color: t.page_shadow.gamma_multiply(0.9) })
                 .inner_margin(egui::Margin::symmetric(18, 16))
                 .show(ui, |ui| {
                     ui.set_width(360.0);
@@ -346,22 +334,33 @@ pub fn notification_viewer(app: &mut PdfCraftApp, ctx: &egui::Context) {
                         .show(ui, |ui| {
                             ui.set_width(ui.available_width());
                             ui.horizontal(|ui| {
-                                let (status_icon, icon_color) = if has_update {
-                                    ("sparkles", t.accent)
-                                } else {
-                                    ("check-circle-2", Color32::from_rgb(0x10, 0xB9, 0x81))
-                                };
-                                icons::paint(ui, Rect::from_center_size(ui.cursor().min + vec2(8.0, 8.0), vec2(18.0, 18.0)), status_icon, 16.0, icon_color);
+                                let (status_icon, icon_color) =
+                                    if has_update { ("sparkles", t.accent) } else { ("check-circle-2", Color32::from_rgb(0x10, 0xB9, 0x81)) };
+                                icons::paint(
+                                    ui,
+                                    Rect::from_center_size(ui.cursor().min + vec2(8.0, 8.0), vec2(18.0, 18.0)),
+                                    status_icon,
+                                    16.0,
+                                    icon_color,
+                                );
                                 ui.add_space(20.0);
                                 ui.vertical(|ui| {
                                     if has_update {
                                         ui.label(egui::RichText::new("New Version Available!").font(theme::semibold(13.0)).color(t.accent_text));
                                         if let crate::updates::Check::Done(Ok(release)) = &app.updates.check {
-                                            ui.label(egui::RichText::new(format!("Version {} is ready to download.", release.version)).font(theme::regular(11.5)).color(t.text));
+                                            ui.label(
+                                                egui::RichText::new(format!("Version {} is ready to download.", release.version))
+                                                    .font(theme::regular(11.5))
+                                                    .color(t.text),
+                                            );
                                         }
                                     } else {
-                                        ui.label(egui::RichText::new(format!("PDFCatalyst v{current_version}")).font(theme::semibold(13.0)).color(t.text));
-                                        ui.label(egui::RichText::new("You are running the latest version.").font(theme::regular(11.5)).color(t.text_muted));
+                                        ui.label(
+                                            egui::RichText::new(format!("PDFCatalyst v{current_version}")).font(theme::semibold(13.0)).color(t.text),
+                                        );
+                                        ui.label(
+                                            egui::RichText::new("You are running the latest version.").font(theme::regular(11.5)).color(t.text_muted),
+                                        );
                                     }
                                 });
                             });
@@ -381,9 +380,17 @@ pub fn notification_viewer(app: &mut PdfCraftApp, ctx: &egui::Context) {
                                                 let mb_down = *downloaded as f64 / 1_048_576.0;
                                                 if let Some(tot) = *total {
                                                     let fraction = (*downloaded as f32 / tot as f32).clamp(0.0, 1.0);
-                                                    ui.label(egui::RichText::new(format!("Downloading… {:.0}% ({:.1} MB)", fraction * 100.0, mb_down)).font(theme::medium(11.5)).color(t.text));
+                                                    ui.label(
+                                                        egui::RichText::new(format!("Downloading… {:.0}% ({:.1} MB)", fraction * 100.0, mb_down))
+                                                            .font(theme::medium(11.5))
+                                                            .color(t.text),
+                                                    );
                                                 } else {
-                                                    ui.label(egui::RichText::new(format!("Downloading… {:.1} MB", mb_down)).font(theme::medium(11.5)).color(t.text));
+                                                    ui.label(
+                                                        egui::RichText::new(format!("Downloading… {:.1} MB", mb_down))
+                                                            .font(theme::medium(11.5))
+                                                            .color(t.text),
+                                                    );
                                                 }
                                             }
                                             crate::updates::DownloadState::ReadyToInstall { path } => {
@@ -414,7 +421,10 @@ pub fn notification_viewer(app: &mut PdfCraftApp, ctx: &egui::Context) {
 
                     // News / Changelog items
                     let notes = [
-                        ("Interactive Design Hub", "Create invoices, proposals, resumes, certificates, and dot-grid notebooks instantly with one click."),
+                        (
+                            "Interactive Design Hub",
+                            "Create invoices, proposals, resumes, certificates, and dot-grid notebooks instantly with one click.",
+                        ),
                         ("Real-time Notifications", "Top-right notification viewer keeps you informed of the latest updates and release highlights."),
                         ("Instant Document Engine", "Generate blank sheets and multi-page templates directly in memory with zero wait."),
                         ("Privacy-First Design", "100% offline, zero telemetry, local-only processing for complete document confidentiality."),
@@ -557,13 +567,16 @@ fn tab(
         };
         if bg.a() > 0 {
             ui.painter().rect_filled(rect, CornerRadius { nw: 7, ne: 7, sw: 0, se: 0 }, bg);
+            if active {
+                ui.painter().rect_stroke(rect, CornerRadius { nw: 7, ne: 7, sw: 0, se: 0 }, Stroke::new(1.0, t.border), egui::StrokeKind::Inside);
+            }
         }
         icons::paint(
             ui,
             Rect::from_min_size(rect.min + vec2(6.0, (height - 16.0) / 2.0), vec2(16.0, 16.0)),
             icon,
             15.0,
-            if active { t.accent } else { t.text_muted },
+            if active { t.text } else { t.text_muted },
         );
         ui.painter().text(rect.min + vec2(28.0, rect.height() / 2.0), Align2::LEFT_CENTER, label, font, if active { t.text } else { t.text_muted });
     });
@@ -751,7 +764,7 @@ pub fn right_rail(app: &mut PdfCraftApp, ui: &mut egui::Ui) {
                 let r = icons::button(ui, icon, 34.0, selected, tl!(tip));
                 if has && !selected {
                     let c = r.rect.right_top() + vec2(-8.0, 8.0);
-                    ui.painter().circle_filled(c, 3.0, t.accent);
+                    ui.painter().circle_filled(c, 2.5, t.text_muted);
                 }
                 if r.clicked() {
                     app.choose_right_panel(if selected { None } else { Some(panel) });

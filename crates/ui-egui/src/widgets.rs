@@ -138,18 +138,18 @@ pub fn icon_mode_tab(ui: &mut egui::Ui, icon: &str, label: &str, active: bool) -
     let press = theme::Press::track(ui, &resp);
     let well = rect.shrink2(vec2(2.0, 8.0));
     if active {
-        let fill = if t.dark() { t.hover.lerp_to_gamma(t.accent, 0.15) } else { t.hover };
-        ui.painter().rect_filled(well, CornerRadius::same(7), fill);
+        let fill = if t.dark() { t.hover.lerp_to_gamma(t.border_strong, 0.25) } else { t.hover };
+        ui.painter().rect(well, CornerRadius::same(7), fill, Stroke::new(1.0, t.border), egui::StrokeKind::Inside);
     } else {
         press.wash(ui, well, 7, false);
     }
     let body = rect.translate(press.offset());
-    let icon_color = if active { t.accent } else { t.icon };
+    let icon_color = if active { t.text } else { t.icon };
     icons::paint(ui, Rect::from_min_size(body.min + vec2(10.0, (rect.height() - 16.0) * 0.5), vec2(16.0, 16.0)), icon, 16.0, icon_color);
     ui.painter().text(body.min + vec2(30.0, rect.height() * 0.5), Align2::LEFT_CENTER, label, font, if active { t.text } else { t.text_muted });
     if active {
         let r = Rect::from_min_max(rect.left_bottom() + vec2(8.0, -2.5), rect.right_bottom() - vec2(8.0, 0.0));
-        ui.painter().rect_filled(r, CornerRadius { nw: 2, ne: 2, sw: 0, se: 0 }, t.accent);
+        ui.painter().rect_filled(r, CornerRadius { nw: 2, ne: 2, sw: 0, se: 0 }, t.text);
     }
     theme::hand(resp)
 }
@@ -163,7 +163,11 @@ pub fn pill_button(ui: &mut egui::Ui, label: &str, primary: bool) -> Response {
     resp.widget_info(|| egui::WidgetInfo::labeled(egui::WidgetType::Button, ui.is_enabled(), label));
     let press = theme::Press::track(ui, &resp);
     let (fill, stroke, text) = if primary {
-        (press.fill(t.accent, t.accent_text, t.accent.lerp_to_gamma(Color32::BLACK, 0.22)), Stroke::NONE, Color32::WHITE)
+        let text_col = if t.dark() { Color32::from_rgb(0x11, 0x11, 0x14) } else { Color32::WHITE };
+        let rest = t.accent;
+        let hover = if t.dark() { Color32::WHITE } else { Color32::from_rgb(0x27, 0x27, 0x2A) };
+        let down = if t.dark() { Color32::from_rgb(0xD4, 0xD4, 0xD8) } else { Color32::BLACK };
+        (press.fill(rest, hover, down), Stroke::NONE, text_col)
     } else {
         (press.fill(t.card, t.hover, t.pressed), Stroke::new(1.0, t.border), t.text)
     };
@@ -606,7 +610,11 @@ pub fn icon_pill(ui: &mut egui::Ui, icon: &str, label: &str, primary: bool) -> R
     resp.widget_info(|| egui::WidgetInfo::labeled(egui::WidgetType::Button, ui.is_enabled(), label));
     let press = theme::Press::track(ui, &resp);
     let (fill, stroke, text) = if primary {
-        (press.fill(t.accent, t.accent_text, t.accent.lerp_to_gamma(Color32::BLACK, 0.22)), Stroke::NONE, Color32::WHITE)
+        let text_col = if t.dark() { Color32::from_rgb(0x11, 0x11, 0x14) } else { Color32::WHITE };
+        let rest = t.accent;
+        let hover = if t.dark() { Color32::WHITE } else { Color32::from_rgb(0x27, 0x27, 0x2A) };
+        let down = if t.dark() { Color32::from_rgb(0xD4, 0xD4, 0xD8) } else { Color32::BLACK };
+        (press.fill(rest, hover, down), Stroke::NONE, text_col)
     } else {
         (press.fill(t.card, t.hover, t.pressed), Stroke::new(1.0, t.border), t.text)
     };
