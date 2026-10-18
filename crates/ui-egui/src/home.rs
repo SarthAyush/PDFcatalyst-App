@@ -377,6 +377,89 @@ pub fn show(app: &mut PdfCraftApp, ui: &mut egui::Ui) {
             }
             ui.add_space(20.0);
 
+            // Quick Action Tools Strip
+            ui.horizontal(|ui| {
+                ui.label(egui::RichText::new("Quick Action Tools").font(theme::semibold(16.0)).color(t.text));
+                ui.add_space(8.0);
+                egui::Frame::NONE
+                    .fill(t.hover)
+                    .stroke(Stroke::new(1.0, t.border))
+                    .corner_radius(CornerRadius::same(6))
+                    .inner_margin(egui::Margin::symmetric(8, 2))
+                    .show(ui, |ui| {
+                        ui.label(egui::RichText::new("ESSENTIALS").font(theme::semibold(10.0)).color(t.text_muted));
+                    });
+            });
+            ui.add_space(2.0);
+            ui.label(
+                egui::RichText::new("Instant one-click document workflows to optimize, organize, and secure your files.")
+                    .font(theme::regular(12.5))
+                    .color(t.text_muted),
+            );
+            ui.add_space(10.0);
+
+            ui.horizontal_wrapped(|ui| {
+                ui.spacing_mut().item_spacing = vec2(12.0, 12.0);
+                let w = ((ui.available_width() - 36.0) / 4.0).max(180.0);
+
+                // Quick Tool 1: Compress & Optimize
+                if workflow_card(
+                    ui, &t, WorkflowCardSpec {
+                        icon: "gauge",
+                        badge: "Speed & Size",
+                        title: "Compress PDF",
+                        desc: "Reduce file size, strip duplicate fonts & downsample images.",
+                        action_label: "Optimize",
+                        width: w,
+                    }
+                ).clicked() {
+                    app.select_tool("optimize");
+                }
+
+                // Quick Tool 2: Merge Documents
+                if workflow_card(
+                    ui, &t, WorkflowCardSpec {
+                        icon: "layers",
+                        badge: "Combine",
+                        title: "Merge PDFs",
+                        desc: "Join multiple PDFs and images into a single clean file.",
+                        action_label: "Combine",
+                        width: w,
+                    }
+                ).clicked() {
+                    app.open_combine_tab();
+                }
+
+                // Quick Tool 3: Organize & Split
+                if workflow_card(
+                    ui, &t, WorkflowCardSpec {
+                        icon: "copy",
+                        badge: "Page Control",
+                        title: "Organize Pages",
+                        desc: "Extract page ranges, rotate orientations, reorder & split.",
+                        action_label: "Organize",
+                        width: w,
+                    }
+                ).clicked() {
+                    app.select_tool("organize");
+                }
+
+                // Quick Tool 4: Sanitize & Protect
+                if workflow_card(
+                    ui, &t, WorkflowCardSpec {
+                        icon: "shield-check",
+                        badge: "Privacy",
+                        title: "Sanitize & Protect",
+                        desc: "Strip hidden metadata, redact sensitive content & encrypt.",
+                        action_label: "Protect",
+                        width: w,
+                    }
+                ).clicked() {
+                    app.select_tool("protect");
+                }
+            });
+            ui.add_space(22.0);
+
             // Interactive Design Templates Section
             ui.horizontal(|ui| {
                 ui.label(egui::RichText::new("Interactive Design Templates").font(theme::semibold(16.0)).color(t.text));

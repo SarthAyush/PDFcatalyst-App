@@ -12,9 +12,15 @@ param(
 $ErrorActionPreference = 'Stop'
 $Root = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
 
-Write-Host "==> Step 1: Compiling PDFCatalyst (Release build)..." -ForegroundColor Cyan
+Write-Host "==> Step 1: Synchronizing workspace version and compiling PDFCatalyst (Release build)..." -ForegroundColor Cyan
 Push-Location $Root
 try {
+    # Ensure workspace version matches target installer version so CARGO_PKG_VERSION is accurate
+    $CurrentVer = (cargo xtask version)
+    if ($CurrentVer.Trim() -ne $Version.Trim()) {
+        Write-Host "Syncing workspace package version: $CurrentVer -> $Version..." -ForegroundColor Yellow
+        cargo xtask version set $Version
+    }
     cargo build --release -p pdfcraft --bin PDFCatalyst
 } finally {
     Pop-Location

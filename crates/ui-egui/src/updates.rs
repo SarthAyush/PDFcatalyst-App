@@ -216,7 +216,13 @@ impl PdfCraftApp {
                     }
                 };
                 if result.as_ref().is_ok_and(|release| is_newer(&release.version, env!("CARGO_PKG_VERSION"))) {
-                    self.updates.open = true;
+                    if self.updates.silent {
+                        if let Ok(release) = &result {
+                            self.toast = Some((format!("A new version ({}) is available. Click the bell icon to view.", release.version), 0.0));
+                        }
+                    } else {
+                        self.updates.open = true;
+                    }
                 }
                 self.updates.check = Check::Done(result);
             }
@@ -337,9 +343,14 @@ pub(crate) fn dialog(app: &mut PdfCraftApp, ctx: &egui::Context) {
             }
             Check::Done(Ok(_)) => {
                 ui.label(
-                    egui::RichText::new(crate::i18n::fmt(tl!("PdfCraft {c} is up to date."), &[("c", current)]))
+                    egui::RichText::new(format!("PDFCatalyst v{current} is up to date."))
                         .font(theme::semibold(14.0))
                         .color(t.text),
+                );
+                ui.label(
+                    egui::RichText::new("You have the latest release installed.")
+                        .font(theme::regular(12.0))
+                        .color(t.text_muted),
                 );
             }
             Check::Done(Err(e)) => {

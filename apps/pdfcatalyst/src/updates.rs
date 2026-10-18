@@ -25,15 +25,28 @@ pub fn latest_release() -> Result<Release, String> {
         .build()
         .call()
         .map_err(|e| format!("couldn't reach GitHub ({e})"))?;
+    let cache_file = std::env::temp_dir().join("CraftPDF_Updates").join("cached_release.json");
     let status = response.status().as_u16();
     if status == 403 {
+        if let Ok(cached) = std::fs::read_to_string(&cache_file) {
+            if let Ok(release) = parse(&cached) {
+                return Ok(release);
+            }
+        }
         let reset = response.headers().get("x-ratelimit-reset").and_then(|v| v.to_str().ok());
         return Err(rate_limited(reset, now_unix()));
     }
     if !(200..300).contains(&status) {
+        if let Ok(cached) = std::fs::read_to_string(&cache_file) {
+            if let Ok(release) = parse(&cached) {
+                return Ok(release);
+            }
+        }
         return Err(format!("couldn't reach GitHub (http status: {status})"));
     }
     let body = response.body_mut().with_config().limit(1 << 20).read_to_string().map_err(|e| format!("unreadable answer ({e})"))?;
+    let _ = std::fs::create_dir_all(std::env::temp_dir().join("CraftPDF_Updates"));
+    let _ = std::fs::write(&cache_file, &body);
     parse(&body)
 }
 

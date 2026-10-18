@@ -17,7 +17,8 @@ pub fn system_default() -> bool {
     if let Some(output) = defaults(&["read", "-g", "NSQuitAlwaysKeepsWindows"]) {
         return keeps_windows(&output);
     }
-    false
+    // Default to true on Windows/Linux like modern browsers and editors
+    true
 }
 
 /// `defaults read` output for a boolean (`1`, `0`, `true`, `false`): true only when it says so.
