@@ -74,8 +74,6 @@ jobs:
             dist/PDFCatalyst-Setup-v${{ steps.version_step.outputs.version }}-x64.exe
             dist/PDFCatalyst-Setup.exe
             dist/PDFCatalyst.exe
-            dist/CraftPDF-Setup-v${{ steps.version_step.outputs.version }}-x64.exe
-            dist/CraftPDF-Setup.exe
-            dist/CraftPDF.exe
+            dist/PDFCatalyst-v${{ steps.version_step.outputs.version }}-Windows-x64.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -2,11 +2,11 @@
 .SYNOPSIS
   Builds PDFCatalyst release binary and creates the Windows Desktop Installer (.exe).
 .EXAMPLE
-  pwsh packaging/windows/build-installer.ps1 -Version "1.0.0"
+  pwsh packaging/windows/build-installer.ps1 -Version "1.0.3"
 #>
 [CmdletBinding()]
 param(
-    [string]$Version = "1.0.0"
+    [string]$Version = "1.0.3"
 )
 
 $ErrorActionPreference = 'Stop'
@@ -24,6 +24,35 @@ try {
     cargo build --release -p pdfcraft --bin PDFCatalyst
 } finally {
     Pop-Location
+}
+
+# Ensure certificate exists for Authenticode signing
+$EnsureCert = Join-Path $PSScriptRoot 'ensure-cert.ps1'
+if (Test-Path $EnsureCert) {
+    try {
+        powershell -ExecutionPolicy Bypass -File $EnsureCert -ErrorAction SilentlyContinue
+    } catch {}
+}
+
+# Locate signtool
+$SignToolCandidates = @(
+    "C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x64\signtool.exe",
+    "C:\Program Files (x86)\Windows Kits\10\bin\10.0.22621.0\x64\signtool.exe",
+    "C:\Program Files (x86)\Windows Kits\10\bin\10.0.19041.0\x64\signtool.exe",
+    (Get-Command signtool.exe -ErrorAction SilentlyContinue).Source
+) | Where-Object { $_ -and (Test-Path $_) }
+
+$SignTool = $SignToolCandidates | Select-Object -First 1
+
+# Sign the main application binary before packaging so the installed binary is signed
+$AppExe = Join-Path $Root 'target\release\PDFCatalyst.exe'
+if ($SignTool -and (Test-Path $AppExe)) {
+    Write-Host "==> Signing application binary with Authenticode Certificate ($AppExe)..." -ForegroundColor Cyan
+    try {
+        & $SignTool sign /v /fd SHA256 /tr "http://timestamp.digicert.com" /td SHA256 /a /n "PDFCatalyst" $AppExe
+    } catch {
+        & $SignTool sign /v /fd SHA256 /a /n "PDFCatalyst" $AppExe
+    }
 }
 
 Write-Host "==> Step 2: Locating Inno Setup Compiler..." -ForegroundColor Cyan
@@ -47,40 +76,15 @@ $DistDir = Join-Path $Root 'dist'
 New-Item -ItemType Directory -Force -Path $DistDir | Out-Null
 
 $VersionedExe = Join-Path $DistDir "PDFCatalyst-Setup-v$Version-x64.exe"
-if (-not (Test-Path $VersionedExe)) {
-    $LegacyExe = Join-Path $DistDir "CraftPDF-Setup-v$Version-x64.exe"
-    if (Test-Path $LegacyExe) {
-        Move-Item $LegacyExe $VersionedExe -Force
-    }
-}
-
 $StandardSetup = Join-Path $DistDir "PDFCatalyst-Setup.exe"
 $PortableExe = Join-Path $DistDir "PDFCatalyst.exe"
+$ZipArchive = Join-Path $DistDir "PDFCatalyst-v$Version-Windows-x64.zip"
 
-# Ensure certificate exists for signing
-$EnsureCert = Join-Path $PSScriptRoot 'ensure-cert.ps1'
-if (Test-Path $EnsureCert) {
+if ($SignTool -and (Test-Path $VersionedExe)) {
+    Write-Host "==> Signing Windows Installer with Authenticode Certificate ($VersionedExe)..." -ForegroundColor Cyan
     try {
-        & pwsh -ExecutionPolicy Bypass -File $EnsureCert -ErrorAction SilentlyContinue
-    } catch {}
-}
-
-# Locate signtool
-$SignToolCandidates = @(
-    "C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x64\signtool.exe",
-    "C:\Program Files (x86)\Windows Kits\10\bin\10.0.22621.0\x64\signtool.exe",
-    "C:\Program Files (x86)\Windows Kits\10\bin\10.0.19041.0\x64\signtool.exe",
-    (Get-Command signtool.exe -ErrorAction SilentlyContinue).Source
-) | Where-Object { $_ -and (Test-Path $_) }
-
-$SignTool = $SignToolCandidates | Select-Object -First 1
-if ($SignTool) {
-    Write-Host "==> Signing binaries with Authenticode Certificate via $SignTool..." -ForegroundColor Cyan
-    $AppExe = Join-Path $Root 'target\release\PDFCatalyst.exe'
-    if (Test-Path $AppExe) {
-        & $SignTool sign /v /fd SHA256 /a /n "PDFCatalyst" $AppExe
-    }
-    if (Test-Path $VersionedExe) {
+        & $SignTool sign /v /fd SHA256 /tr "http://timestamp.digicert.com" /td SHA256 /a /n "PDFCatalyst" $VersionedExe
+    } catch {
         & $SignTool sign /v /fd SHA256 /a /n "PDFCatalyst" $VersionedExe
     }
 }
@@ -88,28 +92,29 @@ if ($SignTool) {
 if (Test-Path $VersionedExe) {
     Copy-Item $VersionedExe $StandardSetup -Force
     Copy-Item (Join-Path $Root 'target\release\PDFCatalyst.exe') $PortableExe -Force
-    
-    # Also stage legacy named binaries so both names exist in dist
-    Copy-Item $VersionedExe (Join-Path $DistDir "CraftPDF-Setup-v$Version-x64.exe") -Force
-    Copy-Item $StandardSetup (Join-Path $DistDir "CraftPDF-Setup.exe") -Force
-    Copy-Item $PortableExe (Join-Path $DistDir "CraftPDF.exe") -Force
+
+    # Clean up any legacy CraftPDF binaries from dist directory
+    Get-ChildItem -Path $DistDir -Filter "*CraftPDF*" | Remove-Item -Force -ErrorAction SilentlyContinue
+
+    # Package portable zip archive (no setup wizard required, no SmartScreen installation blocks)
+    try {
+        if (Test-Path $ZipArchive) { Remove-Item $ZipArchive -Force }
+        Compress-Archive -Path $PortableExe -DestinationPath $ZipArchive -Force
+        Write-Host "Created Portable Zip: $ZipArchive" -ForegroundColor Green
+    } catch {}
 
     Unblock-File $VersionedExe -ErrorAction SilentlyContinue
     Unblock-File $StandardSetup -ErrorAction SilentlyContinue
+    Unblock-File $PortableExe -ErrorAction SilentlyContinue
     
-    # Also update user's downloads folder if it exists
+    # Also update user's downloads folder if it exists and unblock
     $DownloadsPath = [System.IO.Path]::Combine($env:USERPROFILE, "Downloads")
     if (Test-Path $DownloadsPath) {
         Copy-Item $VersionedExe (Join-Path $DownloadsPath "PDFCatalyst-Setup-v$Version-x64.exe") -Force
         Unblock-File (Join-Path $DownloadsPath "PDFCatalyst-Setup-v$Version-x64.exe") -ErrorAction SilentlyContinue
-        # Also unblock any existing old installer in Downloads
-        $OldInDownloads = Join-Path $DownloadsPath "CraftPDF-Setup-v$Version-x64.exe"
-        if (Test-Path $OldInDownloads) {
-            Unblock-File $OldInDownloads -ErrorAction SilentlyContinue
-        }
     }
 
     $size = [math]::Round((Get-Item $VersionedExe).Length / 1MB, 2)
     Write-Host "==> Success! Signed Installer created at: $VersionedExe ($size MB)" -ForegroundColor Green
-    Write-Host "Staged: $StandardSetup and $PortableExe" -ForegroundColor Green
+    Write-Host "Staged: $StandardSetup, $PortableExe, and $ZipArchive" -ForegroundColor Green
 }
